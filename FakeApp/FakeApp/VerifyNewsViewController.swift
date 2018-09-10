@@ -14,6 +14,7 @@ class VerifyNewsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addHideKeyboardOnTouch()
     }
     
     @IBAction func verifyNewsButtonTapped(_ sender: Any) {

@@ -13,8 +13,12 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addHideKeyboardOnTouch()
     }
     
     @IBAction func setApiButtonTapped(_ sender: Any) {
+        FakeApiConnector.shared.apiIP = apiPathTextField.text ?? ""
+        
+        present(message: "Ip set: \(FakeApiConnector.shared.apiIP)")
     }
 }

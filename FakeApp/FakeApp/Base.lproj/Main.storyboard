@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--Vote-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="VoteViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -86,7 +86,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="drg-YP-cUT"/>
+                    <tabBarItem key="tabBarItem" title="Vote" id="drg-YP-cUT"/>
                     <connections>
                         <outlet property="newsURLTextField" destination="4cl-2w-z7C" id="zch-bL-vBE"/>
                         <outlet property="voteTextField" destination="zl8-jO-H4M" id="BpI-ey-A1J"/>
@@ -96,7 +96,7 @@
             </objects>
             <point key="canvasLocation" x="-655" y="941"/>
         </scene>
-        <!--Item-->
+        <!--News-->
         <scene sceneID="GYk-wP-F7c">
             <objects>
                 <viewController id="A8I-B5-3kD" customClass="VerifyNewsViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -144,7 +144,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XqL-WZ-VAb"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="9cn-dW-6YW"/>
+                    <tabBarItem key="tabBarItem" title="News" id="9cn-dW-6YW"/>
                     <connections>
                         <outlet property="newsURLTextField" destination="LAN-06-Im1" id="SKT-Jx-Uxv"/>
                     </connections>
@@ -153,7 +153,7 @@
             </objects>
             <point key="canvasLocation" x="140" y="940"/>
         </scene>
-        <!--Item-->
+        <!--Settings-->
         <scene sceneID="SKJ-R6-b92">
             <objects>
                 <viewController id="sI1-5a-x5I" customClass="SettingsViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -201,7 +201,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bsk-hO-Mdd"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="bA3-c8-KpX"/>
+                    <tabBarItem key="tabBarItem" title="Settings" id="bA3-c8-KpX"/>
                     <connections>
                         <outlet property="apiPathTextField" destination="Ps5-fW-d2m" id="WY7-eq-Zhk"/>
                     </connections>
@@ -221,8 +221,8 @@
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="haK-3a-hHy"/>
-                        <segue destination="sI1-5a-x5I" kind="relationship" relationship="viewControllers" id="hhr-df-0ei"/>
                         <segue destination="A8I-B5-3kD" kind="relationship" relationship="viewControllers" id="VOn-gJ-Dek"/>
+                        <segue destination="sI1-5a-x5I" kind="relationship" relationship="viewControllers" id="hhr-df-0ei"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NRf-7C-0fu" userLabel="First Responder" sceneMemberID="firstResponder"/>

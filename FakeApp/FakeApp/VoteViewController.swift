@@ -15,6 +15,7 @@ class VoteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addHideKeyboardOnTouch()
     }
     
     @IBAction func addVoteButtonTapped(_ sender: Any) {

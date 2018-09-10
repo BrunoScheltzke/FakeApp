@@ -19,5 +19,23 @@ class VoteViewController: UIViewController {
     }
     
     @IBAction func addVoteButtonTapped(_ sender: Any) {
+        guard let vote = voteTextField.text,
+            let newsURL = newsURLTextField.text else {
+                present(message: "You need to enter both texts")
+                return
+        }
+        
+        FakeApiConnector.shared.vote(vote, forNews: newsURL) { (data, error) in
+            DispatchQueue.main.async {
+                if let data = data {
+                    self.present(message: data.description)
+                } else {
+                    self.present(message: error?.localizedDescription ?? "Something wrong happened")
+                }
+                
+                self.voteTextField.text = ""
+                self.newsURLTextField.text = ""
+            }
+        }
     }
 }

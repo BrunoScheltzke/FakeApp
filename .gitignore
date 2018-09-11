@@ -119,6 +119,7 @@ fastlane/test_output
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+*.PNG
 
 # End of https://www.gitignore.io/api/git,xcode,swift,macos,firebase,cocoapods
 contents.xcworkspacedata

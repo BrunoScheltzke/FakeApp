@@ -29,6 +29,7 @@ class FakeApiConnector {
     private let newsKey = "news"
     private let userKey = "user"
     private let publicKeyKey = "publicKey"
+    private let aesKey = "aesKey"
     
     //Temporary Keychain
     private var privateKey: SecKey!
@@ -65,10 +66,7 @@ class FakeApiConnector {
         }
         
         //prepare request
-        guard let data = try! JSONSerialization.jsonObject(with: dataKey, options: []) as? [String : Any] else {
-            completion(false, nil)
-            return
-        }
+        let data = [publicKeyKey: dataKey.base64EncodedString()]
         guard let request = buildPostRequest(fromPath: createUserPath, with: data) else {
             completion(false, nil)
             return

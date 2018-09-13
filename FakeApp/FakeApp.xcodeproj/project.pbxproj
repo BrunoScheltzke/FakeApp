@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		849DC6EC214ABECC0017EBEC /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849DC6EB214ABECC0017EBEC /* ViewExtension.swift */; };
 		84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */; };
 		84A7A5312146ADA400D2A2CB /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A5302146ADA400D2A2CB /* VoteViewController.swift */; };
 		84A7A5342146ADA400D2A2CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84A7A5322146ADA400D2A2CB /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		849DC6EB214ABECC0017EBEC /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		84A7A52B2146ADA400D2A2CB /* FakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84A7A5302146ADA400D2A2CB /* VoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				84A7A5372146ADA500D2A2CB /* LaunchScreen.storyboard */,
 				84A7A53A2146ADA500D2A2CB /* Info.plist */,
 				84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */,
+				849DC6EB214ABECC0017EBEC /* ViewExtension.swift */,
 				84A7A5462146B47400D2A2CB /* ViewControllerExtension.swift */,
 			);
 			path = FakeApp;
@@ -150,6 +153,7 @@
 				84A7A5472146B47400D2A2CB /* ViewControllerExtension.swift in Sources */,
 				84A7A5312146ADA400D2A2CB /* VoteViewController.swift in Sources */,
 				84A7A5452146B2EA00D2A2CB /* FakeApiConnector.swift in Sources */,
+				849DC6EC214ABECC0017EBEC /* ViewExtension.swift in Sources */,
 				84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */,
 				84A7A5412146B1C100D2A2CB /* VerifyNewsViewController.swift in Sources */,
 				84A7A5432146B1E500D2A2CB /* SettingsViewController.swift in Sources */,

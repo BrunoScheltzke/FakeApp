@@ -16,6 +16,11 @@ class VoteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addHideKeyboardOnTouch()
+        
+        view.lock()
+        FakeApiConnector.shared.createUser { [unowned self] (success, error) in
+            self.view.unlock()
+        }
     }
     
     @IBAction func addVoteButtonTapped(_ sender: Any) {

@@ -11,30 +11,32 @@ import Foundation
 class FakeApiConnector {
     static let shared = FakeApiConnector()
     private init() {
-        apiIP = "http://10.41.48.96:3000"
+        apiIP = "http://localhost:3000"
     }
     
     var apiIP: String {
         didSet {
-            apiIP = "http://\(apiIP):3000"
+            apiIP = "http://\(apiIP)"
             print(apiIP)
         }
     }
     
     lazy private var votePath = "\(apiIP)/vote"
     lazy private var verifyNewsPath = "\(apiIP)/news/"
-    lazy private var createUserPath = "\(apiIP)/createUser"
+    lazy private var createUserPath = "\(apiIP)/createBlock"
     
     private let voteKey = "vote"
     private let newsKey = "news"
     private let userKey = "user"
     private let publicKeyKey = "publicKey"
-    private let aesKey = "aesKey"
+    private let aesKeyKey = "aesKey"
     
     //Temporary Keychain
     private var privateKey: SecKey!
     private var publicKey: SecKey!
     private var serverAESKey: SecKey?
+    
+    private var publicKeyString = ""
     
     private let session = URLSession.shared
     
@@ -55,36 +57,53 @@ class FakeApiConnector {
         //generate public key and temporarely store it in this shared instance privately
         publicKey = SecKeyCopyPublicKey(generatedKey)
         
-        print(publicKey)
-        print(publicKey.hashValue)
-        
         //prepare public key to send to server
         var error2: Unmanaged<CFError>?
-        guard let dataKey = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else {
+        guard let dataKey = SecKeyCopyExternalRepresentation(publicKey, &error2) as Data? else {
             completion(false, error2!.takeRetainedValue() as Error)
             return
         }
         
+        let keyString = dataKey.base64EncodedString()
+        publicKeyString = keyString
+        
         //prepare request
-        let data = [publicKeyKey: dataKey.base64EncodedString()]
+        let data = [publicKeyKey: keyString]
         guard let request = buildPostRequest(fromPath: createUserPath, with: data) else {
             completion(false, nil)
             return
         }
-        
         //make call to server requesting creation of user with public key
         let task = session.dataTask(with: request) { [unowned self] (resultData, response, resultError) in
             //on response, get aeskey and temporarely store it in this shared instance privately
-            guard let data = resultData else {
-                completion(false, resultError)
+            guard let data = resultData,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let dict = json as? [String: Any],
+                let strEncryptedAESKey = dict[self.aesKeyKey] as? String,
+                let encryptedAESKey = Data(base64Encoded: strEncryptedAESKey) else {
+                    completion(false, resultError)
+                    return
+            }
+            
+            guard let stringAESKey = SecKeyCreateDecryptedData(self.privateKey,
+                                                               SecKeyAlgorithm.rsaEncryptionRaw,
+                                                               encryptedAESKey as CFData,
+                                                               &error) as Data? else {
+                                                                completion(false, error!.takeRetainedValue() as Error)
+                                                                return
+            }
+            
+            guard let dataKey = Data(base64Encoded: stringAESKey) else {
+                completion(false, nil)
                 return
             }
             
             let options: [String: Any] = [kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
                                           kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
                                           kSecAttrKeySizeInBits as String: 1024]
+            
             var error: Unmanaged<CFError>?
-            guard let key = SecKeyCreateWithData(data as CFData,
+            guard let key = SecKeyCreateWithData(dataKey as CFData,
                                                  options as CFDictionary,
                                                  &error)
                 else {
@@ -113,10 +132,30 @@ class FakeApiConnector {
         return request
     }
     
+    private func getAESKey() -> String? {
+        guard let aesKey = serverAESKey else {
+            return nil
+        }
+        var error: Unmanaged<CFError>?
+        guard let dataKey = SecKeyCopyExternalRepresentation(aesKey, &error) as Data? else {
+//            error!.takeRetainedValue() as Error
+            return nil
+        }
+        
+        return dataKey.base64EncodedString()
+    }
+    
     func vote(_ vote: String, forNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        guard let aesKey = getAESKey() else {
+            completion(nil, nil)
+            return
+        }
+        
         let data = [voteKey: vote,
                     newsKey: news,
-                    userKey: "bruno"]
+                    userKey: "bruno",
+                    aesKeyKey: aesKey,
+                    publicKeyKey: publicKeyString]
         
         guard let url = URL(string: votePath),
             let httpBody = try? JSONSerialization.data(withJSONObject: data, options: []) else {

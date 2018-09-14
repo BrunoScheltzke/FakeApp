@@ -30,7 +30,7 @@ class FakeApiConnector {
     private let publicKeyKey = "userPublicKey"
     private let aesKeyKey = "aesKey"
     private let dateKey = "date"
-    private let encryptedVoteKey = "encryptedVote"
+    private let encryptedVoteKey = "vote"
     
     //Temporary Keychain
     private var privateKey: SecKey!
@@ -87,7 +87,7 @@ class FakeApiConnector {
             }
             
             guard let stringAESKey = SecKeyCreateDecryptedData(self.privateKey,
-                                                               SecKeyAlgorithm.rsaEncryptionRaw,
+                                                               SecKeyAlgorithm.rsaEncryptionOAEPSHA256AESGCM,
                                                                encryptedAESKey as CFData,
                                                                &error) as Data? else {
                                                                 completion(false, error!.takeRetainedValue() as Error)
@@ -123,7 +123,8 @@ class FakeApiConnector {
         //create vote data
         let jsonData: [String : Any] = [voteKey: vote,
                     newsKey: news,
-                    dateKey: Date()]
+                    dateKey: Date(),
+                    publicKeyKey: publicKeyString]
         
         //transform it to Data
         guard let data = jsonData.toData() else {
@@ -134,7 +135,7 @@ class FakeApiConnector {
         //sign it with private key
         var error: Unmanaged<CFError>?
         guard var signature = SecKeyCreateSignature(privateKey,
-                                                    SecKeyAlgorithm.rsaSignatureRaw,
+                                                    SecKeyAlgorithm.rsaSignatureMessagePKCS1v15SHA256,
                                                     data as CFData,
                                                     &error) as Data? else {
                                                         completion(nil, error!.takeRetainedValue() as Error)
@@ -152,7 +153,7 @@ class FakeApiConnector {
         
         var error2: Unmanaged<CFError>?
         guard let encryptedData = SecKeyCreateEncryptedData(serverAESKey,
-                                                         SecKeyAlgorithm.rsaSignatureRaw,
+                                                            SecKeyAlgorithm.rsaEncryptionOAEPSHA256AESGCM,
                                                          signature as CFData,
                                                          &error2) as Data? else {
                                                             completion(nil, error!.takeRetainedValue() as Error)

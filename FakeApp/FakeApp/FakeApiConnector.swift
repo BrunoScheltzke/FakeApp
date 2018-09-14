@@ -26,10 +26,11 @@ class FakeApiConnector {
     lazy private var createUserPath = "\(apiIP)/createBlock"
     
     private let voteKey = "vote"
-    private let newsKey = "news"
-    private let userKey = "user"
-    private let publicKeyKey = "publicKey"
+    private let newsKey = "newsURL"
+    private let publicKeyKey = "userPublicKey"
     private let aesKeyKey = "aesKey"
+    private let dateKey = "date"
+    private let encryptedVoteKey = "encryptedVote"
     
     //Temporary Keychain
     private var privateKey: SecKey!
@@ -118,57 +119,56 @@ class FakeApiConnector {
         task.resume()
     }
     
-    private func buildPostRequest(fromPath path: String, with data: [String: Any]) -> URLRequest? {
-        guard let url = URL(string: path),
-            let httpBody = try? JSONSerialization.data(withJSONObject: data, options: []) else {
-                return nil
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        return request
-    }
-    
-    private func getAESKey() -> String? {
-        guard let aesKey = serverAESKey else {
-            return nil
-        }
-        var error: Unmanaged<CFError>?
-        guard let dataKey = SecKeyCopyExternalRepresentation(aesKey, &error) as Data? else {
-//            error!.takeRetainedValue() as Error
-            return nil
-        }
-        
-        return dataKey.base64EncodedString()
-    }
-    
     func vote(_ vote: String, forNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
-        guard let aesKey = getAESKey() else {
+        //create vote data
+        let jsonData: [String : Any] = [voteKey: vote,
+                    newsKey: news,
+                    dateKey: Date()]
+        
+        //transform it to Data
+        guard let data = jsonData.toData() else {
             completion(nil, nil)
             return
         }
         
-        let data = [voteKey: vote,
-                    newsKey: news,
-                    userKey: "bruno",
-                    aesKeyKey: aesKey,
-                    publicKeyKey: publicKeyString]
-        
-        guard let url = URL(string: votePath),
-            let httpBody = try? JSONSerialization.data(withJSONObject: data, options: []) else {
-                completion(nil, nil)
-                return
+        //sign it with private key
+        var error: Unmanaged<CFError>?
+        guard var signature = SecKeyCreateSignature(privateKey,
+                                                    SecKeyAlgorithm.rsaSignatureRaw,
+                                                    data as CFData,
+                                                    &error) as Data? else {
+                                                        completion(nil, error!.takeRetainedValue() as Error)
+                                                        return
         }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        //concat signature with vote data
+        signature.append(data)
         
+        //encrypt with aes key
+        guard let serverAESKey = serverAESKey else {
+            completion(nil, nil)
+            return
+        }
+        
+        var error2: Unmanaged<CFError>?
+        guard let encryptedData = SecKeyCreateEncryptedData(serverAESKey,
+                                                         SecKeyAlgorithm.rsaSignatureRaw,
+                                                         signature as CFData,
+                                                         &error2) as Data? else {
+                                                            completion(nil, error!.takeRetainedValue() as Error)
+                                                            return
+        }
+        
+        //create json with publickey and encrypted data
+        let jsonEncryptedVote = [publicKeyKey: publicKeyString,
+                                 encryptedVoteKey: encryptedData.base64EncodedString()]
+        
+        guard let request = buildPostRequest(fromPath: votePath, with: jsonEncryptedVote) else {
+            completion(nil, nil)
+            return
+        }
+        
+        //perform the request
         let task = session.dataTask(with: request) { (data, response, error) in
             guard let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []),
@@ -203,5 +203,19 @@ class FakeApiConnector {
         }
         
         task.resume()
+    }
+    
+    private func buildPostRequest(fromPath path: String, with data: [String: Any]) -> URLRequest? {
+        guard let url = URL(string: path),
+            let httpBody = try? JSONSerialization.data(withJSONObject: data, options: []) else {
+                return nil
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = httpBody
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        return request
     }
 }

@@ -92,6 +92,18 @@ class FakeApiConnector {
         }
         //make call to server requesting creation of user with public key
         let task = session.dataTask(with: request) { [unowned self] (resultData, response, resultError) in
+            
+            if let response = response,
+                let httpResponse = response as? HTTPURLResponse,
+                httpResponse.statusCode != 200,
+                let data = resultData,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let dict = json as? [String: Any],
+                let _ = dict["error"] as? String {
+                    completion(false, NSError(domain: "", code: 500, userInfo: dict))
+                    return
+            }
+            
             //on response, get aeskey and temporarely store it in this shared instance privately
             guard let data = resultData,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []),
@@ -183,10 +195,33 @@ class FakeApiConnector {
         
         //perform the request
         let task = session.dataTask(with: request) { (data, response, error) in
-            if let response = response,
-                let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode == 200 {
+            guard let response = response,
+                let httpResponse = response as? HTTPURLResponse else {
+                    completion(false, nil)
+                    return
+            }
+            
+            if httpResponse.statusCode == 200 {
                 completion(true, nil)
+                return
+            } else {
+                if let data = data,
+                    let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let dict = json as? [String: Any],
+                    let errorMsg = dict["errorCode"] as? String,
+                    let errorCode = Int(errorMsg) {
+                    switch errorCode {
+                    case 11:
+                        completion(false, FakeError.erro11)
+                    case 12:
+                        completion(false, FakeError.erro11)
+                    case 13:
+                        completion(false, FakeError.erro13)
+                    default:
+                        completion(false, FakeError.generic)
+                    }
+                    return
+                }
             }
             
             completion(false, error)
@@ -229,5 +264,26 @@ class FakeApiConnector {
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         return request
+    }
+}
+
+public enum FakeError: Error {
+    case error10, erro11, erro12, erro13, generic
+}
+
+extension FakeError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .error10:
+            return NSLocalizedString("Invalid key format", comment: "Issue with public key")
+        case .erro11:
+            return NSLocalizedString("User does not exist", comment: "User may not be registered")
+        case .erro12:
+            return NSLocalizedString("User has not established connection", comment: "AESKey not found")
+        case .erro13:
+            return NSLocalizedString("Error on encrypted data", comment: "Invalid signature")
+        case .generic:
+            return NSLocalizedString("Something wrong happened", comment: "Generic error")
+        }
     }
 }

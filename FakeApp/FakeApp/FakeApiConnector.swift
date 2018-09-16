@@ -24,7 +24,7 @@ class FakeApiConnector {
     }
     
     lazy private var votePath = "\(apiIP)/vote"
-    lazy private var verifyNewsPath = "\(apiIP)/news/"
+    lazy private var verifyNewsPath = "\(apiIP)/newsURL/"
     lazy private var createUserPath = "\(apiIP)/createBlock"
     
     private let voteKey = "vote"

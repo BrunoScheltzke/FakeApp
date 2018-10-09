@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aDR-sK-wOi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aDR-sK-wOi">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Item-->
+        <scene sceneID="kxV-d5-0D2">
+            <objects>
+                <viewController id="atm-Jn-Vql" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bKM-kf-Q1x">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="4ku-9Z-TWI"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="KUH-UR-pkQ"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wAx-W4-SNY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1489" y="940"/>
+        </scene>
         <!--Vote-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -168,13 +184,13 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Setup the api address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KME-HB-5w5">
-                                <rect key="frame" x="79.5" y="113" width="217.5" height="26.5"/>
+                                <rect key="frame" x="79" y="113" width="217.5" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYO-v4-VsN">
-                                <rect key="frame" x="107" y="388" width="160" height="33"/>
+                                <rect key="frame" x="107.5" y="388.5" width="160" height="33"/>
                                 <color key="backgroundColor" red="0.25882352939999997" green="0.60392156860000001" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="77U-ea-s8f"/>
@@ -216,10 +232,12 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="aDR-sK-wOi" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="o9q-pY-hQD">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
+                        <segue destination="atm-Jn-Vql" kind="relationship" relationship="viewControllers" id="1jM-Qt-lO3"/>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="haK-3a-hHy"/>
                         <segue destination="A8I-B5-3kD" kind="relationship" relationship="viewControllers" id="VOn-gJ-Dek"/>
                         <segue destination="sI1-5a-x5I" kind="relationship" relationship="viewControllers" id="hhr-df-0ei"/>

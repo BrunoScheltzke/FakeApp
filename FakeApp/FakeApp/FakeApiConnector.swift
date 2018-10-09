@@ -11,7 +11,9 @@ import CryptoSwift
 
 class FakeApiConnector {
     static let shared = FakeApiConnector()
+    private let encryptionManager: EncryptionManager
     private init() {
+        encryptionManager = EncryptionManager()
         apiIP = "http://localhost:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
@@ -35,22 +37,39 @@ class FakeApiConnector {
     private let dateKey = "date"
     private let encryptedVoteKey = "encryptedVote"
     
-    //Temporary Keychain
-    private var privateKey: SecKey!
-    private var publicKey: SecKey!
     private var serverAESKey: Array<UInt8>?
-    
-    private var publicKeyString = ""
-    private var privateKeyString = ""
     
     private let session = URLSession.shared
     
     private var dateFor: DateFormatter = DateFormatter()
     
-    private let privateKeyTag = "privateKeyTag"
     private let aesKeyTag = "aesKeyTag"
     
-    private let isDebugginR2ac = false
+    private let isDebugginR2ac = true
+    
+    func verifyCredentials(completion: @escaping(Bool, Error?) -> Void) {
+        if let key = getExistingAesKey() {
+            serverAESKey = key
+            completion(true, nil)
+        } else {
+            //get public key
+            let keyRequestResult = encryptionManager.getPublicKey()
+            guard let publicKey = keyRequestResult.0 else {
+                completion(false, keyRequestResult.1)
+                return
+            }
+            requestAesKey(withPublicKey: publicKey) { (aesKey, error) in
+                if let key = aesKey {
+                    self.storeAesKey(key)
+                    completion(true, nil)
+                    return
+                } else {
+                    completion(false, error)
+                    return
+                }
+            }
+        }
+    }
     
     // MARK: Vote
     func vote(_ vote: String, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
@@ -60,7 +79,14 @@ class FakeApiConnector {
             return
         }
         
-        //create vote data
+        //get public key
+        let publicKeyResult = encryptionManager.getPublicKey()
+        guard let publicKeyString = publicKeyResult.key else {
+            completion(false, publicKeyResult.error)
+            return
+        }
+        
+        //create vote json
         let jsonData: [String : Any] = [voteKey: vote,
                                         newsKey: news,
                                         dateKey: dateFor.string(from: Date()),
@@ -72,14 +98,11 @@ class FakeApiConnector {
             return
         }
         
-        //sign it with private key
-        var error: Unmanaged<CFError>?
-        guard let signature = SecKeyCreateSignature(privateKey,
-                                                    SecKeyAlgorithm.rsaSignatureMessagePKCS1v15SHA256,
-                                                    data as CFData,
-                                                    &error) as Data? else {
-                                                        completion(false, error!.takeRetainedValue() as Error)
-                                                        return
+        //sign with private key
+        let signatureResult = encryptionManager.sign(data)
+        guard let signature = signatureResult.signature else {
+            completion(false, signatureResult.error)
+            return
         }
         
         //create json with vote data and signature
@@ -92,15 +115,7 @@ class FakeApiConnector {
         }
         
         //encrypt with aes key
-        var encryptedData: String
-        do {
-            let iv = "4242424242424242".toArrayUInt8()
-            let blockMode = CBC(iv: iv)
-            let aes = try AES(key: serverKey, blockMode: blockMode)
-            let ciphertext = try aes.encrypt(bodyData.bytes)
-            
-            encryptedData = Data(ciphertext).base64EncodedString()
-        } catch {
+        guard let encryptedData = encryptionManager.encrypt(bodyData, withKey: serverKey) else {
             completion(false, nil)
             return
         }
@@ -174,75 +189,17 @@ class FakeApiConnector {
         task.resume()
     }
     
-    // MARK: Initial Setup
-    func setup(completion: @escaping (Bool, Error?) -> Void) {
-        //verify if there are keys on keychain
-        if let privateKey = getExistingPrivateKey() {
-            //there is keys on keychain
-            if let error = setupPrivateKey(privateKey) {
-                //getting external representation of key can throw errors
-                completion(false, error)
-                return
-            } else {
-                //verify if there is a server aeskey
-                if let aesKey = getExistingAesKey() {
-                    self.serverAESKey = aesKey
-                    completion(true, nil)
-                    return
-                } else {
-                    //there is no aeskey, request new one from server
-                    requestAesKey { (aesKey, error) in
-                        if let key = aesKey {
-                            self.serverAESKey = key
-                            self.storeAesKey(key)
-                            completion(true, nil)
-                            return
-                        } else {
-                            completion(false, error)
-                            return
-                        }
-                    }
-                }
-            }
-        } else {
-            //there is no keys on keychain
-            let result = createPrivateKey()
-            guard let privateKey = result.0 else {
-                completion(false, result.1)
-                return
-            }
-            
-            if let error = setupPrivateKey(privateKey) {
-                //getting external representation of key can throw errors
-                completion(false, error)
-                return
-            } else {
-                //request aeskey
-                requestAesKey { (aesKey, error) in
-                    if let key = aesKey {
-                        self.serverAESKey = key
-                        self.storeAesKey(key)
-                        completion(true, nil)
-                        return
-                    } else {
-                        completion(false, error)
-                        return
-                    }
-                }
-            }
-        }
-    }
-    
     // MARK: Request AesKey
     func getExistingAesKey() -> Array<UInt8>? {
         return isDebugginR2ac ? nil : UserDefaults.standard.array(forKey: aesKeyTag) as? Array<UInt8>
     }
     
     func storeAesKey(_ aesKey: Array<UInt8>) {
+        self.serverAESKey = aesKey
         UserDefaults.standard.set(aesKey, forKey: aesKeyTag)
     }
     
-    func requestAesKey(completion: @escaping(Array<UInt8>?, Error?) -> Void) {
+    func requestAesKey(withPublicKey publicKeyString: String, completion: @escaping(Array<UInt8>?, Error?) -> Void) {
         //prepare request
         let data = [publicKeyKey: publicKeyString]
         guard let request = buildPostRequest(fromPath: createUserPath, with: data) else {
@@ -272,84 +229,16 @@ class FakeApiConnector {
                     completion(nil, resultError)
                     return
             }
-            
-            var error4: Unmanaged<CFError>?
-            guard let clearText = SecKeyCreateDecryptedData(self.privateKey,
-                                                            SecKeyAlgorithm.rsaEncryptionRaw,
-                                                            encryptedData as CFData,
-                                                            &error4) as Data? else {
-                                                                let dasError =  error4!.takeRetainedValue() as Error
-                                                                completion(nil, dasError)
-                                                                return
+
+            let decryptionResult = self.encryptionManager.decrypt(encryptedData)
+            if let aesKey = decryptionResult.value {
+                completion(aesKey, nil)
+            } else {
+                completion(nil, decryptionResult.error)
             }
-            
-            let aesKey = clearText.bytes.filter { $0 != 0 }
-            
-            completion(aesKey, nil)
         }
         
         task.resume()
-    }
-    
-    // MARK: Retrieve private key
-    func getExistingPrivateKey() -> SecKey? {
-        let getExistingPrivateKeyQuery: [String: Any] = [kSecClass as String: kSecClassKey,
-                                                         kSecAttrApplicationTag as String: privateKeyTag,
-                                                         kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-                                                         kSecReturnRef as String: true]
-        
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(getExistingPrivateKeyQuery as CFDictionary, &item)
-        if status == errSecSuccess {
-            let key = item as! SecKey
-            return key
-        } else {
-            //private key does not exit
-            return nil
-        }
-    }
-    
-    func setupPrivateKey(_ key: SecKey) -> Error? {
-        privateKey = key
-        //get string out of private key
-        var error2: Unmanaged<CFError>?
-        guard let privateKeyData = SecKeyCopyExternalRepresentation(privateKey, &error2) as Data? else {
-            return error2!.takeRetainedValue() as Error
-        }
-        
-        privateKeyString = privateKeyData.base64EncodedString()
-        
-        //generate public key and temporarely store it in this shared instance privately
-        publicKey = SecKeyCopyPublicKey(key)
-        
-        //prepare public key to send to server
-        var error3: Unmanaged<CFError>?
-        guard let dataKey = SecKeyCopyExternalRepresentation(publicKey, &error3) as Data? else {
-            return error3!.takeRetainedValue() as Error
-        }
-        
-        let keyString = dataKey.base64EncodedString()
-        publicKeyString = keyString
-        
-        return nil
-    }
-    
-    // MARK: Create private key
-    func createPrivateKey() -> (SecKey?, Error?) {
-        //generate private key and store it on keychain
-        let attributes: CFDictionary =
-            [kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-             kSecAttrKeySizeInBits as String: 1024,
-             kSecPrivateKeyAttrs as String:
-                [kSecAttrIsPermanent as String: true,
-                 kSecAttrApplicationTag as String: privateKeyTag]] as CFDictionary
-        
-        var error: Unmanaged<CFError>?
-        guard let generatedKey = SecKeyCreateRandomKey(attributes, &error) else {
-            return (nil, error!.takeRetainedValue() as Error)
-        }
-        
-        return (generatedKey, nil)
     }
     
     private func buildPostRequest(fromPath path: String, with data: [String: Any]) -> URLRequest? {

@@ -19,6 +19,8 @@
 		84A7A5452146B2EA00D2A2CB /* FakeApiConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */; };
 		84A7A5472146B47400D2A2CB /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A5462146B47400D2A2CB /* ViewControllerExtension.swift */; };
 		84B36E6D214BE18000BCEE92 /* DictionaryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B36E6C214BE18000BCEE92 /* DictionaryExtension.swift */; };
+		84E683BD216D55B000A08D87 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E683BC216D55B000A08D87 /* News.swift */; };
+		84E683C2216D577E00A08D87 /* EncryptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E683C1216D577E00A08D87 /* EncryptionManager.swift */; };
 		E0146E6C874EF7C45F032C1C /* Pods_FakeApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC916CB5B9B0C462C9B90E6B /* Pods_FakeApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +40,8 @@
 		84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeApiConnector.swift; sourceTree = "<group>"; };
 		84A7A5462146B47400D2A2CB /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		84B36E6C214BE18000BCEE92 /* DictionaryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtension.swift; sourceTree = "<group>"; };
+		84E683BC216D55B000A08D87 /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+		84E683C1216D577E00A08D87 /* EncryptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionManager.swift; sourceTree = "<group>"; };
 		D177EBB3FA2F5FFADAC27B16 /* Pods-FakeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FakeApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-FakeApp/Pods-FakeApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC916CB5B9B0C462C9B90E6B /* Pods_FakeApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FakeApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -75,21 +79,47 @@
 		84A7A52D2146ADA400D2A2CB /* FakeApp */ = {
 			isa = PBXGroup;
 			children = (
+				84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */,
+				84E683C1216D577E00A08D87 /* EncryptionManager.swift */,
+				84E683BE216D56E500A08D87 /* View Controllers */,
+				84E683BF216D56FC00A08D87 /* Supporting Files */,
+				84E683C0216D570A00A08D87 /* Model */,
 				84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */,
-				84A7A5302146ADA400D2A2CB /* VoteViewController.swift */,
-				84A7A5402146B1C100D2A2CB /* VerifyNewsViewController.swift */,
-				84A7A5422146B1E500D2A2CB /* SettingsViewController.swift */,
 				84A7A5322146ADA400D2A2CB /* Main.storyboard */,
 				84A7A5352146ADA500D2A2CB /* Assets.xcassets */,
 				84A7A5372146ADA500D2A2CB /* LaunchScreen.storyboard */,
 				84A7A53A2146ADA500D2A2CB /* Info.plist */,
-				84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */,
+			);
+			path = FakeApp;
+			sourceTree = "<group>";
+		};
+		84E683BE216D56E500A08D87 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84A7A5302146ADA400D2A2CB /* VoteViewController.swift */,
+				84A7A5402146B1C100D2A2CB /* VerifyNewsViewController.swift */,
+				84A7A5422146B1E500D2A2CB /* SettingsViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		84E683BF216D56FC00A08D87 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				849DC6EB214ABECC0017EBEC /* ViewExtension.swift */,
 				84A7A5462146B47400D2A2CB /* ViewControllerExtension.swift */,
 				84B36E6C214BE18000BCEE92 /* DictionaryExtension.swift */,
 				8442F907214C658C001984E8 /* StringExtension.swift */,
 			);
-			path = FakeApp;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		84E683C0216D570A00A08D87 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				84E683BC216D55B000A08D87 /* News.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		BB64163D7D56294AA0B7979A /* Frameworks */ = {
@@ -221,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84E683C2216D577E00A08D87 /* EncryptionManager.swift in Sources */,
 				84A7A5472146B47400D2A2CB /* ViewControllerExtension.swift in Sources */,
 				84A7A5312146ADA400D2A2CB /* VoteViewController.swift in Sources */,
 				84A7A5452146B2EA00D2A2CB /* FakeApiConnector.swift in Sources */,
@@ -229,6 +260,7 @@
 				8442F908214C658C001984E8 /* StringExtension.swift in Sources */,
 				84A7A5412146B1C100D2A2CB /* VerifyNewsViewController.swift in Sources */,
 				84A7A5432146B1E500D2A2CB /* SettingsViewController.swift in Sources */,
+				84E683BD216D55B000A08D87 /* News.swift in Sources */,
 				84B36E6D214BE18000BCEE92 /* DictionaryExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

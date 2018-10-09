@@ -18,7 +18,7 @@ class VoteViewController: UIViewController {
         addHideKeyboardOnTouch()
         
         view.lock()
-        FakeApiConnector.shared.setup { [unowned self] (success, error) in
+        FakeApiConnector.shared.verifyCredentials { [unowned self] (success, error) in
             self.view.unlock()
         }
     }

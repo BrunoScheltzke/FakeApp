@@ -16,6 +16,11 @@ class VoteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addHideKeyboardOnTouch()
+        
+        view.lock()
+        FakeApiConnector.shared.setup { [unowned self] (success, error) in
+            self.view.unlock()
+        }
     }
     
     @IBAction func addVoteButtonTapped(_ sender: Any) {
@@ -25,10 +30,10 @@ class VoteViewController: UIViewController {
                 return
         }
         
-        FakeApiConnector.shared.vote(vote, forNews: newsURL) { (data, error) in
+        FakeApiConnector.shared.vote(vote, forNews: newsURL) { (success, error) in
             DispatchQueue.main.async {
-                if let data = data {
-                    self.present(message: data.description)
+                if success {
+                    self.present(message: "Great! Vote added")
                 } else {
                     self.present(message: error?.localizedDescription ?? "Something wrong happened")
                 }

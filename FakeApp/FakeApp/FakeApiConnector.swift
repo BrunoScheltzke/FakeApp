@@ -52,6 +52,128 @@ class FakeApiConnector {
     
     private let isDebugginR2ac = false
     
+    // MARK: Vote
+    func vote(_ vote: String, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
+        //make sure user has established connection with blockchain
+        guard let serverKey = serverAESKey else {
+            completion(false, nil)
+            return
+        }
+        
+        //create vote data
+        let jsonData: [String : Any] = [voteKey: vote,
+                                        newsKey: news,
+                                        dateKey: dateFor.string(from: Date()),
+                                        publicKeyKey: publicKeyString]
+        
+        //transform it to Data
+        guard let data = jsonData.toData() else {
+            completion(false, nil)
+            return
+        }
+        
+        //sign it with private key
+        var error: Unmanaged<CFError>?
+        guard let signature = SecKeyCreateSignature(privateKey,
+                                                    SecKeyAlgorithm.rsaSignatureMessagePKCS1v15SHA256,
+                                                    data as CFData,
+                                                    &error) as Data? else {
+                                                        completion(false, error!.takeRetainedValue() as Error)
+                                                        return
+        }
+        
+        //create json with vote data and signature
+        let body = [voteKey: data.base64EncodedString(),
+                    signatureKey: signature.base64EncodedString()]
+        
+        guard let bodyData = body.toData() else {
+            completion(false, nil)
+            return
+        }
+        
+        //encrypt with aes key
+        var encryptedData: String
+        do {
+            let iv = "4242424242424242".toArrayUInt8()
+            let blockMode = CBC(iv: iv)
+            let aes = try AES(key: serverKey, blockMode: blockMode)
+            let ciphertext = try aes.encrypt(bodyData.bytes)
+            
+            encryptedData = Data(ciphertext).base64EncodedString()
+        } catch {
+            completion(false, nil)
+            return
+        }
+        
+        //create json with publickey and encrypted data
+        let jsonEncryptedVote = [publicKeyKey: publicKeyString,
+                                 encryptedVoteKey: encryptedData]
+        
+        guard let request = buildPostRequest(fromPath: votePath, with: jsonEncryptedVote) else {
+            completion(false, nil)
+            return
+        }
+        
+        //perform the request
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let response = response,
+                let httpResponse = response as? HTTPURLResponse else {
+                    completion(false, nil)
+                    return
+            }
+            
+            if httpResponse.statusCode == 200 {
+                completion(true, nil)
+                return
+            } else {
+                if let data = data,
+                    let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let dict = json as? [String: Any],
+                    let errorMsg = dict["errorCode"] as? String,
+                    let errorCode = Int(errorMsg) {
+                    switch errorCode {
+                    case 11:
+                        completion(false, FakeError.erro11)
+                    case 12:
+                        completion(false, FakeError.erro11)
+                    case 13:
+                        completion(false, FakeError.erro13)
+                    default:
+                        completion(false, FakeError.generic)
+                    }
+                    return
+                }
+            }
+            
+            completion(false, error)
+        }
+        
+        task.resume()
+    }
+    
+    // MARK: Verify News
+    func verifyVeracity(ofNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        guard let url = URL(string: verifyNewsPath + news) else {
+            completion(nil, nil)
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let dict = json as? [String:AnyObject] else {
+                    completion(nil, error)
+                    return
+            }
+            
+            completion(dict, error)
+        }
+        
+        task.resume()
+    }
+    
     // MARK: Initial Setup
     func setup(completion: @escaping (Bool, Error?) -> Void) {
         //verify if there are keys on keychain
@@ -228,129 +350,6 @@ class FakeApiConnector {
         }
         
         return (generatedKey, nil)
-    }
-    
-    
-    // MARK: Vote
-    func vote(_ vote: String, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
-        //make sure user has established connection with blockchain
-        guard let serverKey = serverAESKey else {
-            completion(false, nil)
-            return
-        }
-        
-        //create vote data
-        let jsonData: [String : Any] = [voteKey: vote,
-                    newsKey: news,
-                    dateKey: dateFor.string(from: Date()),
-                    publicKeyKey: publicKeyString]
-        
-        //transform it to Data
-        guard let data = jsonData.toData() else {
-            completion(false, nil)
-            return
-        }
-        
-        //sign it with private key
-        var error: Unmanaged<CFError>?
-        guard let signature = SecKeyCreateSignature(privateKey,
-                                                    SecKeyAlgorithm.rsaSignatureMessagePKCS1v15SHA256,
-                                                    data as CFData,
-                                                    &error) as Data? else {
-                                                        completion(false, error!.takeRetainedValue() as Error)
-                                                        return
-        }
-        
-        //create json with vote data and signature
-        let body = [voteKey: data.base64EncodedString(),
-                    signatureKey: signature.base64EncodedString()]
-    
-        guard let bodyData = body.toData() else {
-            completion(false, nil)
-            return
-        }
-        
-        //encrypt with aes key
-        var encryptedData: String
-        do {
-            let iv = "4242424242424242".toArrayUInt8()
-            let blockMode = CBC(iv: iv)
-            let aes = try AES(key: serverKey, blockMode: blockMode)
-            let ciphertext = try aes.encrypt(bodyData.bytes)
-            
-            encryptedData = Data(ciphertext).base64EncodedString()
-        } catch {
-            completion(false, nil)
-            return
-        }
-        
-        //create json with publickey and encrypted data
-        let jsonEncryptedVote = [publicKeyKey: publicKeyString,
-                                 encryptedVoteKey: encryptedData]
-        
-        guard let request = buildPostRequest(fromPath: votePath, with: jsonEncryptedVote) else {
-            completion(false, nil)
-            return
-        }
-        
-        //perform the request
-        let task = session.dataTask(with: request) { (data, response, error) in
-            guard let response = response,
-                let httpResponse = response as? HTTPURLResponse else {
-                    completion(false, nil)
-                    return
-            }
-            
-            if httpResponse.statusCode == 200 {
-                completion(true, nil)
-                return
-            } else {
-                if let data = data,
-                    let json = try? JSONSerialization.jsonObject(with: data, options: []),
-                    let dict = json as? [String: Any],
-                    let errorMsg = dict["errorCode"] as? String,
-                    let errorCode = Int(errorMsg) {
-                    switch errorCode {
-                    case 11:
-                        completion(false, FakeError.erro11)
-                    case 12:
-                        completion(false, FakeError.erro11)
-                    case 13:
-                        completion(false, FakeError.erro13)
-                    default:
-                        completion(false, FakeError.generic)
-                    }
-                    return
-                }
-            }
-            
-            completion(false, error)
-        }
-        
-        task.resume()
-    }
-    
-    // MARK: Verify News
-    func verifyVeracity(ofNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
-        guard let url = URL(string: verifyNewsPath + news) else {
-            completion(nil, nil)
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            guard let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []),
-                let dict = json as? [String:AnyObject] else {
-                    completion(nil, error)
-                    return
-            }
-            
-            completion(dict, error)
-        }
-        
-        task.resume()
     }
     
     private func buildPostRequest(fromPath path: String, with data: [String: Any]) -> URLRequest? {

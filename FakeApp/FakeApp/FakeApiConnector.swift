@@ -47,47 +47,84 @@ class FakeApiConnector {
     
     private var dateFor: DateFormatter = DateFormatter()
     
-    func createUser(completion: @escaping (Bool, Error?) -> Void) {
-        //generate private key and temporarely store it in this shared instance privately
-        let attributes: CFDictionary =
-            [kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-             kSecAttrKeySizeInBits as String: 1024] as CFDictionary
-        
-        var error: Unmanaged<CFError>?
-        guard let generatedKey = SecKeyCreateRandomKey(attributes, &error) else {
-            completion(false, error!.takeRetainedValue() as Error)
-            return
+    private let privateKeyTag = "privateKeyTag"
+    private let aesKeyTag = "aesKeyTag"
+    
+    private let isDebugginR2ac = false
+    
+    // MARK: Initial Setup
+    func setup(completion: @escaping (Bool, Error?) -> Void) {
+        //verify if there are keys on keychain
+        if let privateKey = getExistingPrivateKey() {
+            //there is keys on keychain
+            if let error = setupPrivateKey(privateKey) {
+                //getting external representation of key can throw errors
+                completion(false, error)
+                return
+            } else {
+                //verify if there is a server aeskey
+                if let aesKey = getExistingAesKey() {
+                    self.serverAESKey = aesKey
+                    completion(true, nil)
+                    return
+                } else {
+                    //there is no aeskey, request new one from server
+                    requestAesKey { (aesKey, error) in
+                        if let key = aesKey {
+                            self.serverAESKey = key
+                            self.storeAesKey(key)
+                            completion(true, nil)
+                            return
+                        } else {
+                            completion(false, error)
+                            return
+                        }
+                    }
+                }
+            }
+        } else {
+            //there is no keys on keychain
+            let result = createPrivateKey()
+            guard let privateKey = result.0 else {
+                completion(false, result.1)
+                return
+            }
+            
+            if let error = setupPrivateKey(privateKey) {
+                //getting external representation of key can throw errors
+                completion(false, error)
+                return
+            } else {
+                //request aeskey
+                requestAesKey { (aesKey, error) in
+                    if let key = aesKey {
+                        self.serverAESKey = key
+                        self.storeAesKey(key)
+                        completion(true, nil)
+                        return
+                    } else {
+                        completion(false, error)
+                        return
+                    }
+                }
+            }
         }
-        
-        privateKey = generatedKey
-        
-        //get string out of private key
-        var error2: Unmanaged<CFError>?
-        guard let privateKeyData = SecKeyCopyExternalRepresentation(privateKey, &error2) as Data? else {
-            completion(false, error2!.takeRetainedValue() as Error)
-            return
-        }
-        
-        privateKeyString = privateKeyData.base64EncodedString()
-        
-        //generate public key and temporarely store it in this shared instance privately
-        publicKey = SecKeyCopyPublicKey(generatedKey)
-        
-        //prepare public key to send to server
-        var error3: Unmanaged<CFError>?
-        guard let dataKey = SecKeyCopyExternalRepresentation(publicKey, &error3) as Data? else {
-            completion(false, error3!.takeRetainedValue() as Error)
-            return
-        }
-        
-        let keyString = dataKey.base64EncodedString()
-        publicKeyString = keyString
-        
-        
+    }
+    
+    // MARK: Request AesKey
+    func getExistingAesKey() -> Array<UInt8>? {
+        return isDebugginR2ac ? nil : UserDefaults.standard.array(forKey: aesKeyTag) as? Array<UInt8>
+    }
+    
+    func storeAesKey(_ aesKey: Array<UInt8>) {
+        UserDefaults.standard.set(aesKey, forKey: aesKeyTag)
+    }
+    
+    func requestAesKey(completion: @escaping(Array<UInt8>?, Error?) -> Void) {
         //prepare request
-        let data = [publicKeyKey: keyString]
+        let data = [publicKeyKey: publicKeyString]
         guard let request = buildPostRequest(fromPath: createUserPath, with: data) else {
-            completion(false, nil)
+            completion(nil, nil)
             return
         }
         //make call to server requesting creation of user with public key
@@ -100,8 +137,8 @@ class FakeApiConnector {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []),
                 let dict = json as? [String: Any],
                 let _ = dict["error"] as? String {
-                    completion(false, NSError(domain: "", code: 500, userInfo: dict))
-                    return
+                completion(nil, NSError(domain: "", code: 500, userInfo: dict))
+                return
             }
             
             //on response, get aeskey and temporarely store it in this shared instance privately
@@ -110,7 +147,7 @@ class FakeApiConnector {
                 let dict = json as? [String: Any],
                 let strEncryptedAESKey = dict[self.aesKeyKey] as? String,
                 let encryptedData = Data(base64Encoded: strEncryptedAESKey) else {
-                    completion(false, resultError)
+                    completion(nil, resultError)
                     return
             }
             
@@ -120,18 +157,81 @@ class FakeApiConnector {
                                                             encryptedData as CFData,
                                                             &error4) as Data? else {
                                                                 let dasError =  error4!.takeRetainedValue() as Error
-                                                                completion(false, dasError)
+                                                                completion(nil, dasError)
                                                                 return
             }
             
-            self.serverAESKey = clearText.bytes.filter { $0 != 0 }
-
-            completion(true, nil)
+            let aesKey = clearText.bytes.filter { $0 != 0 }
+            
+            completion(aesKey, nil)
         }
         
         task.resume()
     }
     
+    // MARK: Retrieve private key
+    func getExistingPrivateKey() -> SecKey? {
+        let getExistingPrivateKeyQuery: [String: Any] = [kSecClass as String: kSecClassKey,
+                                                         kSecAttrApplicationTag as String: privateKeyTag,
+                                                         kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+                                                         kSecReturnRef as String: true]
+        
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(getExistingPrivateKeyQuery as CFDictionary, &item)
+        if status == errSecSuccess {
+            let key = item as! SecKey
+            return key
+        } else {
+            //private key does not exit
+            return nil
+        }
+    }
+    
+    func setupPrivateKey(_ key: SecKey) -> Error? {
+        privateKey = key
+        //get string out of private key
+        var error2: Unmanaged<CFError>?
+        guard let privateKeyData = SecKeyCopyExternalRepresentation(privateKey, &error2) as Data? else {
+            return error2!.takeRetainedValue() as Error
+        }
+        
+        privateKeyString = privateKeyData.base64EncodedString()
+        
+        //generate public key and temporarely store it in this shared instance privately
+        publicKey = SecKeyCopyPublicKey(key)
+        
+        //prepare public key to send to server
+        var error3: Unmanaged<CFError>?
+        guard let dataKey = SecKeyCopyExternalRepresentation(publicKey, &error3) as Data? else {
+            return error3!.takeRetainedValue() as Error
+        }
+        
+        let keyString = dataKey.base64EncodedString()
+        publicKeyString = keyString
+        
+        return nil
+    }
+    
+    // MARK: Create private key
+    func createPrivateKey() -> (SecKey?, Error?) {
+        //generate private key and store it on keychain
+        let attributes: CFDictionary =
+            [kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+             kSecAttrKeySizeInBits as String: 1024,
+             kSecPrivateKeyAttrs as String:
+                [kSecAttrIsPermanent as String: true,
+                 kSecAttrApplicationTag as String: privateKeyTag]] as CFDictionary
+        
+        var error: Unmanaged<CFError>?
+        guard let generatedKey = SecKeyCreateRandomKey(attributes, &error) else {
+            return (nil, error!.takeRetainedValue() as Error)
+        }
+        
+        return (generatedKey, nil)
+    }
+    
+    
+    // MARK: Vote
     func vote(_ vote: String, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
         //make sure user has established connection with blockchain
         guard let serverKey = serverAESKey else {
@@ -230,6 +330,7 @@ class FakeApiConnector {
         task.resume()
     }
     
+    // MARK: Verify News
     func verifyVeracity(ofNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
         guard let url = URL(string: verifyNewsPath + news) else {
             completion(nil, nil)

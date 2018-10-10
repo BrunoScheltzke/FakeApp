@@ -74,14 +74,14 @@ class NewsDetailViewController: UIViewController {
     }
     
     @IBAction func voteFakeButtonTapped(_ sender: UIButton) {
-        vote("Fake", for: news)
+        vote(false, for: news)
     }
     
     @IBAction func voteTrueButtonTapped(_ sender: Any) {
-        vote("True", for: news)
+        vote(true, for: news)
     }
     
-    func vote(_ vote: String, for news: News) {
+    func vote(_ vote: Bool, for news: News) {
         self.view.lock()
         FakeApiConnector.shared.vote(vote, forNews: news.url) { (success, error) in
             DispatchQueue.main.async {

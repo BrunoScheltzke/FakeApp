@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CryptoSwift
 
 class FakeApiConnector {
     static let shared = FakeApiConnector()
@@ -73,9 +72,15 @@ class FakeApiConnector {
     }
     
     // MARK: Vote
-    func vote(_ vote: String, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
+    func vote(_ vote: Bool, forNews news: String, completion: @escaping (Bool, Error?) -> Void) {
         //make sure user has established connection with blockchain
         guard let serverKey = serverAESKey else {
+            completion(false, nil)
+            return
+        }
+        
+        //encode url
+        guard let news = news.base64encoded() else {
             completion(false, nil)
             return
         }
@@ -169,7 +174,8 @@ class FakeApiConnector {
     
     // MARK: Verify News
     func verifyVeracity(ofNews news: String, completion: @escaping (News?, Error?) -> Void) {
-        guard let url = URL(string: verifyNewsPath + news) else {
+        guard let news = news.base64encoded(),
+            let url = URL(string: verifyNewsPath + news) else {
             completion(nil, nil)
             return
         }
@@ -185,9 +191,10 @@ class FakeApiConnector {
             }
             
             let indexNum = dict[self.reliabilityIndexKey] as? Int ?? ReliabilityIndex.neutral.rawValue
+            let decodedNews = news.base64decoded()!
             
             let index = ReliabilityIndex(rawValue: indexNum)!
-            let resultNews = News.init(portal: nil, url: news, title: nil, reliabilityIndex: index)
+            let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index)
             
             completion(resultNews, error)
         }

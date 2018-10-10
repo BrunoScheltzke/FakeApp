@@ -25,6 +25,15 @@ class NewsDetailViewController: UIViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        title = news.reliabilityIndex.asString
+        navigationController?.navigationBar.barTintColor = news.reliabilityIndex.color
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
+    }
+    
     func setupViews() {
         fakeButton.layer.addShadow(with: #colorLiteral(red: 0.1803921569, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alpha: 0.23, xOffset: 0, yOffset: 0, blur: 10, spread: 0)
         trueButton.layer.addShadow(with: #colorLiteral(red: 0.1803921569, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alpha: 0.23, xOffset: 0, yOffset: 0, blur: 10, spread: 0)
@@ -37,16 +46,19 @@ class NewsDetailViewController: UIViewController {
         let shouldShowButtons = (voteCardBottomConstraint.constant == 0) ? false : true
         let opinarButtonTitle = shouldShowButtons ? "Cancelar" : "Opinar"
         let constant: CGFloat = shouldShowButtons ? 0 : -110
-        
+        self.opinarButton.setTitle(opinarButtonTitle, for: .normal)
         
         UIView.animate(withDuration: 0.3) {
             self.voteCardBottomConstraint.constant = constant
-            self.opinarButton.setTitle(opinarButtonTitle, for: .normal)
             self.view.layoutIfNeeded()
         }
     }
     
     @IBAction func askedToReadNews(_ sender: Any) {
+        if let url = URL(string: news.url), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:]) { _ in
+            }
+        }
     }
     
     func setupTableView() {

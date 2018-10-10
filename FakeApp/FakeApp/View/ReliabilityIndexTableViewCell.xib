@@ -21,6 +21,9 @@
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L53-zu-1rU">
                         <rect key="frame" x="16" y="10" width="311" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="35" id="YnR-qL-ybF"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -40,9 +43,9 @@
                     <constraint firstItem="L4U-ny-FXw" firstAttribute="trailing" secondItem="L53-zu-1rU" secondAttribute="trailing" id="J2I-Na-sU7"/>
                     <constraint firstAttribute="bottom" secondItem="L4U-ny-FXw" secondAttribute="bottom" constant="10" id="Lw3-OB-Cjm"/>
                     <constraint firstItem="L53-zu-1rU" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="Qkx-8m-boy"/>
+                    <constraint firstAttribute="trailing" secondItem="L53-zu-1rU" secondAttribute="trailing" constant="16" id="Uey-iR-Ve6"/>
                     <constraint firstItem="L4U-ny-FXw" firstAttribute="top" secondItem="L53-zu-1rU" secondAttribute="bottom" constant="5" id="YYJ-he-PT8"/>
                     <constraint firstItem="L4U-ny-FXw" firstAttribute="leading" secondItem="L53-zu-1rU" secondAttribute="leading" id="aee-nb-dUZ"/>
-                    <constraint firstAttribute="trailing" secondItem="L53-zu-1rU" secondAttribute="trailing" constant="16" id="uMC-7X-WkY"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

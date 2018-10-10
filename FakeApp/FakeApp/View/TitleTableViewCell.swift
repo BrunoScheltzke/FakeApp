@@ -12,7 +12,7 @@ class TitleTableViewCell: UITableViewCell {
     var news: News! {
         didSet {
             title.text = news.title
-            portal.text = "Portal:" + news.portal.name
+            portal.text = "Portal: " + news.portal.name
             colorView.backgroundColor = news.reliabilityIndex.color
         }
     }

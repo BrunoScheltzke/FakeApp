@@ -24,14 +24,14 @@ enum ReliabilityIndex: Int {
         switch self {
         case .fake: return "Fake"
         case .fact: return "Fato"
-        case .neutral: return "Neutral"
+        case .neutral: return "Neutro"
         }
     }
     
     var description: String {
         switch self {
-        case .fake: return "Baseado nos usuários, concluímos que essa notícia é falsa."
-        case .fact: return "Baseado nos usuários, concluímos que essa notícia é verdadeira."
+        case .fake: return "Baseado na opinião dos usuários, concluímos que essa notícia é falsa."
+        case .fact: return "Baseado na opinião dos usuários, concluímos que essa notícia é verdadeira."
         case .neutral: return "Não temos votos suficientes para determinar a veracidade dessa notícia. Vote e ajude!"
         }
     }

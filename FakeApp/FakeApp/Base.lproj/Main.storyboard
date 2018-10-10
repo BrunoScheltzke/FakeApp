@@ -62,27 +62,120 @@
         <!--News Detail View Controller-->
         <scene sceneID="Udb-h0-eaK">
             <objects>
-                <viewController id="Ni8-dv-fTG" customClass="NewsDetailViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="Ni8-dv-fTG" customClass="NewsDetailViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nkw-98-6AP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ESt-d0-BRL">
-                                <rect key="frame" x="0.0" y="116" width="375" height="502"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="160" translatesAutoresizingMaskIntoConstraints="NO" id="ESt-d0-BRL">
+                                <rect key="frame" x="0.0" y="116" width="375" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ce-YA-aWF">
+                                <rect key="frame" x="0.0" y="617" width="375" height="160"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="1nC-cZ-OVm">
+                                        <rect key="frame" x="16" y="94" width="343" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q7J-0R-Ja1">
+                                                <rect key="frame" x="0.0" y="0.0" width="161.5" height="50"/>
+                                                <color key="backgroundColor" red="0.67845368949999996" green="0.044392442769999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <state key="normal" title="Fake">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="8"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="voteFakeButtonTapped:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="Jrp-GS-YR7"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9mB-5j-hDI">
+                                                <rect key="frame" x="181.5" y="0.0" width="161.5" height="50"/>
+                                                <color key="backgroundColor" red="0.001842024725" green="0.64871921190000004" blue="0.0028580690790000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <state key="normal" title="Fato">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="8"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="voteTrueButtonTapped:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="bfL-nc-nuy"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="DWQ-O3-lRt"/>
+                                        </constraints>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eu li e acho que essa notícia é:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YIe-It-Cxr">
+                                        <rect key="frame" x="0.0" y="48.5" width="375" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZP7-pt-CFd">
+                                        <rect key="frame" x="187.5" y="5" width="187.5" height="43.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <state key="normal" title="Opinar"/>
+                                        <connections>
+                                            <action selector="askedToVote:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="SIK-0t-NjU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rAR-A9-Ytf">
+                                        <rect key="frame" x="0.0" y="5" width="187.5" height="43.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <state key="normal" title="Ler notícia"/>
+                                        <connections>
+                                            <action selector="askedToReadNews:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="lMH-Wy-f8a"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="ZP7-pt-CFd" firstAttribute="width" secondItem="rAR-A9-Ytf" secondAttribute="width" id="05B-RD-Uzr"/>
+                                    <constraint firstItem="1nC-cZ-OVm" firstAttribute="leading" secondItem="6ce-YA-aWF" secondAttribute="leading" constant="16" id="7WV-QS-KzX"/>
+                                    <constraint firstItem="ZP7-pt-CFd" firstAttribute="top" secondItem="6ce-YA-aWF" secondAttribute="top" constant="5" id="Dqy-4b-k7v"/>
+                                    <constraint firstAttribute="trailing" secondItem="YIe-It-Cxr" secondAttribute="trailing" id="HC2-ks-mtO"/>
+                                    <constraint firstAttribute="bottom" secondItem="1nC-cZ-OVm" secondAttribute="bottom" constant="16" id="Haw-4k-WnJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="1nC-cZ-OVm" secondAttribute="trailing" constant="16" id="IWi-Bi-SNU"/>
+                                    <constraint firstAttribute="height" constant="160" id="JEP-5H-tZe"/>
+                                    <constraint firstItem="YIe-It-Cxr" firstAttribute="leading" secondItem="6ce-YA-aWF" secondAttribute="leading" id="KSe-4i-Nxq"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZP7-pt-CFd" secondAttribute="trailing" id="Mdw-cu-ovZ"/>
+                                    <constraint firstItem="ZP7-pt-CFd" firstAttribute="top" secondItem="rAR-A9-Ytf" secondAttribute="top" id="O8A-OY-FAM"/>
+                                    <constraint firstItem="1nC-cZ-OVm" firstAttribute="top" secondItem="YIe-It-Cxr" secondAttribute="bottom" constant="25" id="T1M-CT-KIe"/>
+                                    <constraint firstItem="rAR-A9-Ytf" firstAttribute="leading" secondItem="6ce-YA-aWF" secondAttribute="leading" id="Xbm-M0-czi"/>
+                                    <constraint firstItem="YIe-It-Cxr" firstAttribute="top" secondItem="ZP7-pt-CFd" secondAttribute="bottom" id="akX-Fa-ucP"/>
+                                    <constraint firstItem="ZP7-pt-CFd" firstAttribute="bottom" secondItem="rAR-A9-Ytf" secondAttribute="bottom" id="fbQ-Rc-gZV"/>
+                                    <constraint firstItem="ZP7-pt-CFd" firstAttribute="leading" secondItem="rAR-A9-Ytf" secondAttribute="trailing" id="vOS-zL-GBb"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="5Ma-Az-zKC" firstAttribute="trailing" secondItem="6ce-YA-aWF" secondAttribute="trailing" id="G1z-sD-Tni"/>
+                            <constraint firstAttribute="bottom" secondItem="6ce-YA-aWF" secondAttribute="bottom" constant="-110" id="XNo-Tm-ogg"/>
                             <constraint firstItem="5Ma-Az-zKC" firstAttribute="bottom" secondItem="ESt-d0-BRL" secondAttribute="bottom" id="djh-zx-kyV"/>
                             <constraint firstItem="ESt-d0-BRL" firstAttribute="top" secondItem="5Ma-Az-zKC" secondAttribute="top" id="eYK-yp-a2t"/>
                             <constraint firstItem="ESt-d0-BRL" firstAttribute="leading" secondItem="5Ma-Az-zKC" secondAttribute="leading" id="fPr-8P-Z1V"/>
                             <constraint firstItem="5Ma-Az-zKC" firstAttribute="trailing" secondItem="ESt-d0-BRL" secondAttribute="trailing" id="mJ7-0Z-ef7"/>
+                            <constraint firstItem="6ce-YA-aWF" firstAttribute="leading" secondItem="5Ma-Az-zKC" secondAttribute="leading" id="zlo-qv-J5x"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5Ma-Az-zKC"/>
                     </view>
                     <connections>
+                        <outlet property="fakeButton" destination="q7J-0R-Ja1" id="aN4-Px-ON9"/>
+                        <outlet property="opinarButton" destination="ZP7-pt-CFd" id="c9U-RL-Yyf"/>
                         <outlet property="tableView" destination="ESt-d0-BRL" id="RLJ-If-aPU"/>
+                        <outlet property="trueButton" destination="9mB-5j-hDI" id="6zN-Bm-W41"/>
+                        <outlet property="voteCardBottomConstraint" destination="XNo-Tm-ogg" id="ZGF-3U-Amv"/>
+                        <outlet property="voteCardView" destination="6ce-YA-aWF" id="dyE-Vu-HC9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6GX-em-ia4" userLabel="First Responder" sceneMemberID="firstResponder"/>

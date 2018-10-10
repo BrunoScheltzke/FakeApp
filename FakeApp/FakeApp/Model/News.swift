@@ -31,7 +31,7 @@ enum ReliabilityIndex: Int {
     var description: String {
         switch self {
         case .fake: return "Baseado nos usuários, concluímos que essa notícia é falsa."
-        case .fact: return "Baseado nos usuários, concluímos que essa notícia é falsa."
+        case .fact: return "Baseado nos usuários, concluímos que essa notícia é verdadeira."
         case .neutral: return "Não temos votos suficientes para determinar a veracidade dessa notícia. Vote e ajude!"
         }
     }

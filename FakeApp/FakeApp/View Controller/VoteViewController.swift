@@ -10,35 +10,47 @@ import UIKit
 
 class VoteViewController: UIViewController {
     @IBOutlet weak var newsURLTextField: UITextField!
-    @IBOutlet weak var voteTextField: UITextField!
+    @IBOutlet weak var trueButton: UIButton!
     
-    
+    @IBOutlet weak var fakeButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         addHideKeyboardOnTouch()
         
-        view.lock()
-        FakeApiConnector.shared.verifyCredentials { [unowned self] (success, error) in
-            self.view.unlock()
-        }
+        fakeButton.layer.addShadow(with: #colorLiteral(red: 0.1803921569, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alpha: 0.23, xOffset: 0, yOffset: 0, blur: 10, spread: 0)
+        trueButton.layer.addShadow(with: #colorLiteral(red: 0.1803921569, green: 0.1803921569, blue: 0.1803921569, alpha: 1), alpha: 0.23, xOffset: 0, yOffset: 0, blur: 10, spread: 0)
     }
     
-    @IBAction func addVoteButtonTapped(_ sender: Any) {
-        guard let vote = voteTextField.text,
-            let newsURL = newsURLTextField.text else {
-                present(message: "You need to enter both texts")
-                return
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func voteTrueButtonTapped(_ sender: Any) {
+        guard let url = newsURLTextField.text else {
+            self.present(message: "Insira a url da notícia")
+            return
         }
         
-        FakeApiConnector.shared.vote(vote, forNews: newsURL) { (success, error) in
+        vote("True", for: url)
+    }
+    
+    @IBAction func voteFalseButtonTapped(_ sender: Any) {
+        guard let url = newsURLTextField.text else {
+            self.present(message: "Insira a url da notícia")
+            return
+        }
+        
+        vote("False", for: url)
+    }
+    
+    func vote(_ vote: String, for url: String) {
+        FakeApiConnector.shared.vote(vote, forNews: url) { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    self.present(message: "Great! Vote added")
+                    self.present(message: "Obrigado por dar a sua opinião!")
                 } else {
-                    self.present(message: error?.localizedDescription ?? "Something wrong happened")
+                    self.present(message: error?.localizedDescription ?? "Ops, deu algo errado :(")
                 }
-                
-                self.voteTextField.text = ""
                 self.newsURLTextField.text = ""
             }
         }

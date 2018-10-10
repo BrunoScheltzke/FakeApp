@@ -36,7 +36,7 @@ class NewsViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4793452024, blue: 0.9990863204, alpha: 1)
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
     }
     

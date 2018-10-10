@@ -18,7 +18,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="VRc-lY-0Oi">
                         <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </navigationBar>
                     <connections>
                         <segue destination="hWt-dm-vND" kind="relationship" relationship="rootViewController" id="JzG-r2-eZD"/>
@@ -31,7 +30,7 @@
         <!--Populares-->
         <scene sceneID="0CH-RI-m7n">
             <objects>
-                <viewController id="hWt-dm-vND" customClass="NewsViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="hWt-dm-vND" customClass="NewsViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Icf-CQ-pN1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,7 +49,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Lhi-2L-xFY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Populares" id="bQe-xN-cXR"/>
+                    <navigationItem key="navigationItem" title="Populares" id="bQe-xN-cXR">
+                        <barButtonItem key="rightBarButtonItem" title="Votar em outra notícia" style="done" id="i6L-1U-c8g">
+                            <connections>
+                                <segue destination="BYZ-38-t0r" kind="presentation" id="cjW-iP-1sc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="bg2-QH-W0L" id="DNB-bP-vla"/>
                         <segue destination="Ni8-dv-fTG" kind="show" identifier="presentNews" id="ZMc-KJ-dMK"/>
@@ -63,13 +68,13 @@
         <!--News Detail View Controller-->
         <scene sceneID="Udb-h0-eaK">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="Ni8-dv-fTG" customClass="NewsDetailViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ni8-dv-fTG" customClass="NewsDetailViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nkw-98-6AP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="160" translatesAutoresizingMaskIntoConstraints="NO" id="ESt-d0-BRL">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="502"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ce-YA-aWF">
@@ -191,69 +196,94 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zl8-jO-H4M">
-                                <rect key="frame" x="30" y="318.5" width="315" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vote for news" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x19-Da-owg">
-                                <rect key="frame" x="119.5" y="113" width="136.5" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vote para outra notícia" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x19-Da-owg">
+                                <rect key="frame" x="75" y="113" width="225" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mQE-hd-9qp">
-                                <rect key="frame" x="107.5" y="388.5" width="160" height="33"/>
-                                <color key="backgroundColor" red="0.25882352939999997" green="0.60392156860000001" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL da notícia:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Kh-Nh-ueA">
+                                <rect key="frame" x="30" y="191.5" width="315" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Insira a url da notícia" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-2w-z7C">
+                                <rect key="frame" x="30" y="232.5" width="315" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="oEm-dF-OXL"/>
+                                    <constraint firstAttribute="height" constant="50" id="EKb-u5-UHq"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                <state key="normal" title="Ok">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="addVoteButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dd0-Ic-3KO"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="News URL:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Kh-Nh-ueA">
-                                <rect key="frame" x="30" y="192" width="315" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vote:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vBU-BH-gkY">
-                                <rect key="frame" x="30" y="284" width="315" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-2w-z7C">
-                                <rect key="frame" x="30" y="233.5" width="315" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="603-9k-hL7">
+                                <rect key="frame" x="30" y="302.5" width="315" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxu-c1-SwW">
+                                        <rect key="frame" x="0.0" y="0.0" width="147.5" height="50"/>
+                                        <color key="backgroundColor" red="0.67845368949999996" green="0.044392442769999998" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <state key="normal" title="Fake">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="voteFakeButtonTapped:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="UYb-Zd-KDy"/>
+                                            <action selector="voteFalseButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="f1G-6S-I9K"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IUU-ga-mua">
+                                        <rect key="frame" x="167.5" y="0.0" width="147.5" height="50"/>
+                                        <color key="backgroundColor" red="0.001842024725" green="0.64871921190000004" blue="0.0028580690790000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <state key="normal" title="Fato">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="voteTrueButtonTapped:" destination="Ni8-dv-fTG" eventType="touchUpInside" id="0Cz-TP-2XA"/>
+                                            <action selector="voteTrueButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MXQ-zr-P8N"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="bTk-gl-tgz"/>
+                                </constraints>
+                            </stackView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="047-iE-LdW">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem id="b6H-HD-Xny">
+                                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="cancel" id="3AZ-Fq-UPP">
+                                            <connections>
+                                                <action selector="cancelButtonTapped:" destination="BYZ-38-t0r" id="mIZ-N3-tDT"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="x19-Da-owg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="100-Pk-2dB"/>
-                            <constraint firstItem="zl8-jO-H4M" firstAttribute="top" secondItem="vBU-BH-gkY" secondAttribute="bottom" constant="13.5" id="1d7-eK-SjM"/>
-                            <constraint firstItem="vBU-BH-gkY" firstAttribute="leading" secondItem="2Kh-Nh-ueA" secondAttribute="leading" id="3eV-dc-Wyh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="vBU-BH-gkY" secondAttribute="trailing" constant="30" id="6Au-mL-9zz"/>
-                            <constraint firstItem="mQE-hd-9qp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="LgX-AP-e6I"/>
-                            <constraint firstItem="zl8-jO-H4M" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="Muk-Sq-1Vm"/>
+                            <constraint firstItem="603-9k-hL7" firstAttribute="top" secondItem="4cl-2w-z7C" secondAttribute="bottom" constant="20" id="Esb-Vn-g2U"/>
+                            <constraint firstItem="603-9k-hL7" firstAttribute="trailing" secondItem="4cl-2w-z7C" secondAttribute="trailing" id="FAm-GC-stf"/>
                             <constraint firstItem="x19-Da-owg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="93" id="Rba-6l-mvm"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4cl-2w-z7C" secondAttribute="trailing" constant="30" id="V8A-dy-zee"/>
-                            <constraint firstItem="mQE-hd-9qp" firstAttribute="top" secondItem="zl8-jO-H4M" secondAttribute="bottom" constant="40" id="Vmi-pL-bYJ"/>
-                            <constraint firstItem="zl8-jO-H4M" firstAttribute="leading" secondItem="2Kh-Nh-ueA" secondAttribute="leading" id="WRY-YJ-5Ce"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zl8-jO-H4M" secondAttribute="trailing" constant="30" id="Why-jw-uff"/>
                             <constraint firstItem="4cl-2w-z7C" firstAttribute="top" secondItem="2Kh-Nh-ueA" secondAttribute="bottom" constant="20.5" id="Yu4-lm-AQ5"/>
                             <constraint firstItem="4cl-2w-z7C" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="b99-KW-qNm"/>
                             <constraint firstItem="2Kh-Nh-ueA" firstAttribute="top" secondItem="x19-Da-owg" secondAttribute="bottom" constant="52" id="fkv-u3-8Gd"/>
-                            <constraint firstItem="vBU-BH-gkY" firstAttribute="top" secondItem="4cl-2w-z7C" secondAttribute="bottom" constant="20.5" id="lPL-68-3KS"/>
-                            <constraint firstItem="zl8-jO-H4M" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="p2l-Bb-xtW"/>
+                            <constraint firstItem="603-9k-hL7" firstAttribute="leading" secondItem="4cl-2w-z7C" secondAttribute="leading" id="kHw-GF-smV"/>
                             <constraint firstItem="4cl-2w-z7C" firstAttribute="leading" secondItem="2Kh-Nh-ueA" secondAttribute="leading" id="xks-et-Eri"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2Kh-Nh-ueA" secondAttribute="trailing" constant="30" id="yxw-cc-FYF"/>
                         </constraints>
@@ -261,13 +291,14 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Vote" id="drg-YP-cUT"/>
                     <connections>
+                        <outlet property="fakeButton" destination="wxu-c1-SwW" id="3Vi-YE-tit"/>
                         <outlet property="newsURLTextField" destination="4cl-2w-z7C" id="zch-bL-vBE"/>
-                        <outlet property="voteTextField" destination="zl8-jO-H4M" id="BpI-ey-A1J"/>
+                        <outlet property="trueButton" destination="IUU-ga-mua" id="ZJY-Iv-EMh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-655" y="941"/>
+            <point key="canvasLocation" x="-1626" y="2490"/>
         </scene>
         <!--News-->
         <scene sceneID="GYk-wP-F7c">
@@ -395,7 +426,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="qXH-fw-cNn" kind="relationship" relationship="viewControllers" id="Sii-w3-Nou"/>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="haK-3a-hHy"/>
                         <segue destination="A8I-B5-3kD" kind="relationship" relationship="viewControllers" id="VOn-gJ-Dek"/>
                         <segue destination="sI1-5a-x5I" kind="relationship" relationship="viewControllers" id="hhr-df-0ei"/>
                     </connections>

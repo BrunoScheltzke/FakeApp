@@ -36,6 +36,7 @@ class FakeApiConnector {
     private let signatureKey = "signature"
     private let dateKey = "date"
     private let encryptedVoteKey = "encryptedVote"
+    private let reliabilityIndexKey = "reliabilityIndexKey"
     
     private var serverAESKey: Array<UInt8>?
     
@@ -167,7 +168,7 @@ class FakeApiConnector {
     }
     
     // MARK: Verify News
-    func verifyVeracity(ofNews news: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
+    func verifyVeracity(ofNews news: String, completion: @escaping (News?, Error?) -> Void) {
         guard let url = URL(string: verifyNewsPath + news) else {
             completion(nil, nil)
             return
@@ -183,7 +184,12 @@ class FakeApiConnector {
                     return
             }
             
-            completion(dict, error)
+            let indexNum = dict[self.reliabilityIndexKey] as? Int ?? ReliabilityIndex.neutral.rawValue
+            
+            let index = ReliabilityIndex(rawValue: indexNum)!
+            let resultNews = News.init(portal: nil, url: news, title: nil, reliabilityIndex: index)
+            
+            completion(resultNews, error)
         }
         
         task.resume()

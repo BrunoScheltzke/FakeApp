@@ -11,8 +11,18 @@ import UIKit
 class TitleTableViewCell: UITableViewCell {
     var news: News! {
         didSet {
-            title.text = news.title
-            portal.text = "Portal: " + news.portal.name
+            if let newsTitle = news.title {
+                title.text = newsTitle
+            } else {
+                title.text = "Clique no botão 'Ler notícia' para ver detalhes"
+            }
+            
+            if let portalName = news.portal?.name {
+                portal.text = "Portal: " + portalName
+            } else {
+                portal.text = ""
+            }
+            
             colorView.backgroundColor = news.reliabilityIndex.color
         }
     }

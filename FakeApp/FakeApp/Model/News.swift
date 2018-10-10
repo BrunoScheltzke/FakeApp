@@ -9,9 +9,9 @@
 import UIKit
 
 struct News {
-    let portal: Portal
+    let portal: Portal?
     let url: String
-    let title: String
+    let title: String?
     let reliabilityIndex: ReliabilityIndex
 }
 

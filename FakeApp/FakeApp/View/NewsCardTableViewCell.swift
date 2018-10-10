@@ -11,11 +11,22 @@ import UIKit
 class NewsCardTableViewCell: UITableViewCell {
     var news: News! {
         didSet {
-            title.text = news.title
-            portal.text = "Portal: " + news.portal.name
+            if let newsTitle = news.title {
+                title.text = newsTitle
+            } else {
+                title.text = "Notícia encontrada"
+            }
+            
+            if let portalName = news.portal?.name {
+                portal.text = "Portal: " + portalName
+            } else {
+                portal.text = "Clique para ver detalhes"
+            }
+            
             colorView.backgroundColor = news.reliabilityIndex.color
         }
     }
+    
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var portal: UILabel!
     @IBOutlet weak var cardView: UIView!

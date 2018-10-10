@@ -14,8 +14,16 @@ class NewsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var news: [News] = []
     
+    var searchResults: [News] = []
+    var isSearching: Bool = false
+    
+    let searchController = UISearchController(searchResultsController: nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupSearchController()
+        
         view.lock()
         FakeApiConnector.shared.verifyCredentials { [unowned self] (success, error) in
             self.view.unlock()
@@ -32,12 +40,28 @@ class NewsViewController: UIViewController {
         }
     }
     
+    func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Procure a veracidade de notícias"
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4793452024, blue: 0.9990863204, alpha: 1)
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationItem.hidesSearchBarWhenScrolling = true
     }
     
     func setupTableView() {
@@ -58,9 +82,59 @@ class NewsViewController: UIViewController {
     }
 }
 
+extension NewsViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
+}
+
+extension NewsViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchController.searchBar.placeholder = "Procure a veracidade de notícias"
+        isSearching = false
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchController.searchBar.placeholder = "Insira a url da notícia"
+        isSearching = true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard var url = searchBar.text else {
+            present(message: "Insira a url de uma notícia.")
+            return
+        }
+        
+        if url.first! == "w" || url.first! == "W" {
+            url = "https://" + url
+        }
+        
+        guard let validURL = URL(string: url),
+            UIApplication.shared.canOpenURL(validURL) else {
+            present(message: "Essa url não parece válida.")
+            return
+        }
+        
+        view.lock()
+        FakeApiConnector.shared.verifyVeracity(ofNews: url) { (news, error) in
+            DispatchQueue.main.async {
+                self.view.unlock()
+                if let news = news {
+                    self.searchResults = [news]
+                } else {
+                    let errorMessage = error != nil ? error!.localizedDescription : "Ops, algum erro ocorreu"
+                    self.present(message: errorMessage)
+                }
+                self.tableView.reloadData()
+            }
+        }
+    }
+}
+
 extension NewsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let news = self.news[indexPath.row]
+        let news =  isSearching ? searchResults[indexPath.row] : self.news[indexPath.row]
         
         performSegue(withIdentifier: presentNewsSegue, sender: news)
     }
@@ -68,12 +142,15 @@ extension NewsViewController: UITableViewDelegate {
 
 extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return news.count
+        return  isSearching ? searchResults.count : news.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: NewsCardTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.news = news[indexPath.row]
+        
+        let news = isSearching ? searchResults[indexPath.row] : self.news[indexPath.row]
+        
+        cell.news = news
         return cell
     }
 }

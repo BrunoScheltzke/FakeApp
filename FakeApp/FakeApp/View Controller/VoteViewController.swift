@@ -26,9 +26,19 @@ class VoteViewController: UIViewController {
     }
     
     @IBAction func voteTrueButtonTapped(_ sender: Any) {
-        guard let url = newsURLTextField.text else {
+        guard var url = newsURLTextField.text else {
             self.present(message: "Insira a url da notícia")
             return
+        }
+        
+        if url.first! == "w" {
+            url = "https://" + url
+        }
+        
+        guard let validURL = URL(string: url),
+            UIApplication.shared.canOpenURL(validURL) else {
+                present(message: "Essa url não parece válida.")
+                return
         }
         
         vote("True", for: url)

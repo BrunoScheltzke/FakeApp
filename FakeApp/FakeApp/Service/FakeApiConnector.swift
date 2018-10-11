@@ -11,8 +11,10 @@ import Foundation
 class FakeApiConnector {
     static let shared = FakeApiConnector()
     private let encryptionManager: EncryptionManager
+    private let previewManager: PreviewManager
     private init() {
         encryptionManager = EncryptionManager()
+        previewManager = PreviewManager()
         apiIP = "http://localhost:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
@@ -191,12 +193,19 @@ class FakeApiConnector {
             }
             
             let indexNum = dict[self.reliabilityIndexKey] as? Int ?? ReliabilityIndex.neutral.rawValue
+            let index = ReliabilityIndex(rawValue: indexNum)!
             let decodedNews = news.base64decoded()!
             
-            let index = ReliabilityIndex(rawValue: indexNum)!
-            let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index)
-            
-            completion(resultNews, error)
+            self.previewManager.getPreview(of: decodedNews, completion: { (result, error) in
+                guard let result = result else {
+                    let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index)
+                    completion(resultNews, error)
+                    return
+                }
+                
+                let resultNews = News.init(portal: Portal(name: result.portal), url: decodedNews, title: result.title, reliabilityIndex: index)
+                completion(resultNews, error)
+            })
         }
         
         task.resume()

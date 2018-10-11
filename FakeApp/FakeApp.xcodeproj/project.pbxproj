@@ -21,6 +21,7 @@
 		8400CB7C216E437F008C8C00 /* NewsCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8400CB7A216E437F008C8C00 /* NewsCardTableViewCell.xib */; };
 		8442F908214C658C001984E8 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442F907214C658C001984E8 /* StringExtension.swift */; };
 		844D302D216E475900C71D81 /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D302C216E475900C71D81 /* Layer.swift */; };
+		847B5A32216ED69C000EE744 /* PreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B5A31216ED69C000EE744 /* PreviewManager.swift */; };
 		849DC6EC214ABECC0017EBEC /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849DC6EB214ABECC0017EBEC /* ViewExtension.swift */; };
 		84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */; };
 		84A7A5312146ADA400D2A2CB /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A5302146ADA400D2A2CB /* VoteViewController.swift */; };
@@ -55,6 +56,7 @@
 		8400CB7A216E437F008C8C00 /* NewsCardTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsCardTableViewCell.xib; sourceTree = "<group>"; };
 		8442F907214C658C001984E8 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		844D302C216E475900C71D81 /* Layer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layer.swift; sourceTree = "<group>"; };
+		847B5A31216ED69C000EE744 /* PreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewManager.swift; sourceTree = "<group>"; };
 		849DC6EB214ABECC0017EBEC /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		84A7A52B2146ADA400D2A2CB /* FakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			children = (
 				84A7A5442146B2EA00D2A2CB /* FakeApiConnector.swift */,
 				84E683C1216D577E00A08D87 /* EncryptionManager.swift */,
+				847B5A31216ED69C000EE744 /* PreviewManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -300,10 +303,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FakeApp/Pods-FakeApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftLinkPreview/SwiftLinkPreview.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftLinkPreview.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -329,6 +334,7 @@
 				8400CB7B216E437F008C8C00 /* NewsCardTableViewCell.swift in Sources */,
 				8400CB6E216E3485008C8C00 /* NewsURLTableViewCell.swift in Sources */,
 				8400CB76216E3B1E008C8C00 /* ReusableView.swift in Sources */,
+				847B5A32216ED69C000EE744 /* PreviewManager.swift in Sources */,
 				84E683C6216D716000A08D87 /* NewsViewController.swift in Sources */,
 				84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */,
 				8442F908214C658C001984E8 /* StringExtension.swift in Sources */,

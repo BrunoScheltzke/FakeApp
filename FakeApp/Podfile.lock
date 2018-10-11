@@ -1,16 +1,20 @@
 PODS:
   - CryptoSwift (0.11.0)
+  - SwiftLinkPreview (2.3.1)
 
 DEPENDENCIES:
   - CryptoSwift
+  - SwiftLinkPreview
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - CryptoSwift
+    - SwiftLinkPreview
 
 SPEC CHECKSUMS:
   CryptoSwift: ad5208dd2aae0a764ea4ce2c2d34bd067cae67f0
+  SwiftLinkPreview: 7fa103fdbf20f1644c23289dc5ebc01425d997ab
 
-PODFILE CHECKSUM: 464bb5c85799c461361394b8df5529aa2260d024
+PODFILE CHECKSUM: d716c55697b294d4df809f7cce9e8639b2a99271
 
 COCOAPODS: 1.5.3

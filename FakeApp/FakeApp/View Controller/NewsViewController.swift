@@ -24,19 +24,19 @@ class NewsViewController: UIViewController {
         
         setupSearchController()
         
+        setupTableView()
+        
         view.lock()
-        FakeApiConnector.shared.verifyCredentials { [unowned self] (success, error) in
-            self.view.unlock()
-            
-            DispatchQueue.main.async {
-                self.setupTableView()
-            }
-            mockNewsData { (news, error) in
-                self.news = news
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+        FakeApiConnector.shared.verifyCredentials { (success, error) in
+            FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
+                self.news = news ?? []
+                self.view.unlock()
+                self.tableView.reloadData()
+                
+                if let error = error {
+                    self.present(message: error.localizedDescription)
                 }
-            }
+            })
         }
     }
     
@@ -98,6 +98,7 @@ extension NewsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchController.searchBar.placeholder = "Insira a url da notícia"
         isSearching = true
+        tableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

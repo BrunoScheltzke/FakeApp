@@ -29,6 +29,7 @@ class FakeApiConnector {
     lazy private var votePath = "\(apiIP)/vote"
     lazy private var verifyNewsPath = "\(apiIP)/newsURL/"
     lazy private var createUserPath = "\(apiIP)/createBlock"
+    lazy private var getTrendingNewsPath = "\(apiIP)/trendingNews"
     
     private let voteKey = "vote"
     private let newsKey = "newsURL"
@@ -37,7 +38,7 @@ class FakeApiConnector {
     private let signatureKey = "signature"
     private let dateKey = "date"
     private let encryptedVoteKey = "encryptedVote"
-    private let reliabilityIndexKey = "reliabilityIndexKey"
+    private let reliabilityIndexKey = "reliabilityIndex"
     
     private var serverAESKey: Array<UInt8>?
     
@@ -208,6 +209,56 @@ class FakeApiConnector {
             })
         }
         
+        task.resume()
+    }
+    
+    func requestTrendingNews(completion: @escaping([News]?, Error?) -> Void) {
+        guard let url = URL(string: getTrendingNewsPath) else {
+            completion(nil, nil)
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let newsDict = json as? [[String:AnyObject]] else {
+                    completion(nil, error)
+                    return
+            }
+            
+            var news: [News] = []
+            let newsInfo = newsDict.map({ dict -> (url: String, index: ReliabilityIndex) in
+                let urlEncoded = dict["url"] as! String
+                let url = urlEncoded.base64decoded()!
+                let ind = dict[self.reliabilityIndexKey] as! Int
+                let index = ReliabilityIndex(rawValue: ind)!
+                return (url, index)
+            })
+            
+            let taskGroup = DispatchGroup()
+            
+            newsInfo.forEach({ (newsInfoItem) in
+                taskGroup.enter()
+                self.previewManager.getPreview(of: newsInfoItem.url, completion: { (result, error) in
+                    if let result = result {
+                        let resultNews = News.init(portal: Portal(name: result.portal), url: newsInfoItem.url, title: result.title, reliabilityIndex: newsInfoItem.index)
+                        news.append(resultNews)
+                    } else {
+                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index)
+                        news.append(resultNews)
+                    }
+                    defer {
+                        taskGroup.leave()
+                    }
+                })
+            })
+            
+            taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+                completion(news, nil)
+            }))
+        }
         task.resume()
     }
     

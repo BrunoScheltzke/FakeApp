@@ -20,10 +20,15 @@ You will find the steps necessary on the [FakeApi git repository](https://github
 - [x] Create basic vote screen
 - [x] Create basic verify-news screen
 - [x] Create settings screen to setup FakeApi
-- [ ] Determine user's signing keys approach
-- [ ] Implement user authentication
-- [ ] Modify vote screen so it only takes false or true values for vote
-- [ ] Modify verify-news screen to display news veracity in a more user-friendly way
+- [x] Determine user's signing keys approach
+- [x] Implement user authentication
+- [x] Modify vote screen so it only takes false or true values for vote
+- [x] Modify verify-news screen to display news veracity in a more user-friendly way
+- [ ] Create app icon
+- [ ] Submit to App Store
+- [ ] Let user know if s/he has voted on a certain news
+- [ ] Display number of voters on news
+- [ ] Display news that other users have voted based on news the current user has voted
 
 ## Author
 [Bruno Scheltzke 🙋‍♂️](https://www.linkedin.com/in/brunoscheltzke/)

@@ -15,7 +15,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://localhost:3000"
+        apiIP = "http://marfim.lad.pucrs.br:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     
@@ -48,7 +48,7 @@ class FakeApiConnector {
     
     private let aesKeyTag = "aesKeyTag"
     
-    private let isDebugginR2ac = true
+    private let isDebugginR2ac = false
     
     func verifyCredentials(completion: @escaping(Bool, Error?) -> Void) {
         if let key = getExistingAesKey() {

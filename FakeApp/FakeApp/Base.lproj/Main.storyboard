@@ -49,13 +49,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Lhi-2L-xFY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Populares" id="bQe-xN-cXR">
-                        <barButtonItem key="rightBarButtonItem" title="Votar em outra notícia" style="done" id="i6L-1U-c8g">
-                            <connections>
-                                <segue destination="BYZ-38-t0r" kind="presentation" id="cjW-iP-1sc"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Populares" id="bQe-xN-cXR"/>
                     <connections>
                         <outlet property="tableView" destination="bg2-QH-W0L" id="DNB-bP-vla"/>
                         <segue destination="Ni8-dv-fTG" kind="show" identifier="presentNews" id="ZMc-KJ-dMK"/>

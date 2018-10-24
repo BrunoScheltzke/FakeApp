@@ -37,6 +37,7 @@
 		84E683C2216D577E00A08D87 /* EncryptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E683C1216D577E00A08D87 /* EncryptionManager.swift */; };
 		84E683C4216D6F9F00A08D87 /* Portal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E683C3216D6F9F00A08D87 /* Portal.swift */; };
 		84E683C6216D716000A08D87 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E683C5216D716000A08D87 /* NewsViewController.swift */; };
+		84FACC562180C56800E29AAD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FACC552180C56800E29AAD /* User.swift */; };
 		E0146E6C874EF7C45F032C1C /* Pods_FakeApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC916CB5B9B0C462C9B90E6B /* Pods_FakeApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,7 @@
 		84E683C1216D577E00A08D87 /* EncryptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionManager.swift; sourceTree = "<group>"; };
 		84E683C3216D6F9F00A08D87 /* Portal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Portal.swift; sourceTree = "<group>"; };
 		84E683C5216D716000A08D87 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
+		84FACC552180C56800E29AAD /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D177EBB3FA2F5FFADAC27B16 /* Pods-FakeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FakeApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-FakeApp/Pods-FakeApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC916CB5B9B0C462C9B90E6B /* Pods_FakeApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FakeApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -182,6 +184,7 @@
 			children = (
 				84E683BC216D55B000A08D87 /* News.swift */,
 				84E683C3216D6F9F00A08D87 /* Portal.swift */,
+				84FACC552180C56800E29AAD /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				84E683BD216D55B000A08D87 /* News.swift in Sources */,
 				84B36E6D214BE18000BCEE92 /* DictionaryExtension.swift in Sources */,
 				8400CB78216E3CD2008C8C00 /* NewsDetailViewController.swift in Sources */,
+				84FACC562180C56800E29AAD /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

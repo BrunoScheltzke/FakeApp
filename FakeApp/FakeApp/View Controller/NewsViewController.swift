@@ -30,9 +30,10 @@ class NewsViewController: UIViewController {
         FakeApiConnector.shared.verifyCredentials { (success, error) in
             FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
                 self.news = news ?? []
-                self.view.unlock()
-                self.tableView.reloadData()
-                
+                DispatchQueue.main.async {
+                    self.view.unlock()
+                    self.tableView.reloadData()
+                }
                 if let error = error {
                     self.present(message: error.localizedDescription)
                 }
@@ -158,10 +159,10 @@ extension NewsViewController: UITableViewDataSource {
 
 func mockNewsData(completion: @escaping ([News], Error?) -> Void) {
     let globo = Portal(name: "G1")
-    let news1 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/09/bolsonaro-diz-que-governo-corrupto-estimula-o-crime-e-que-vai-governar-pelo-exemplo.ghtml", title: "Bolsonaro diz que governo corrupto estimula o crime e que vai 'governar pelo exemplo'", reliabilityIndex: .fact)
-    let news2 = News.init(portal: globo, url: "https://g1.globo.com/sp/sao-paulo/eleicoes/2018/noticia/2018/10/09/haddad-diz-estar-aberto-a-incorporar-propostas-de-ciro-gomes-em-programa-de-governo.ghtml", title: "Haddad diz estar 'aberto' a incorporar propostas de Ciro Gomes em programa de governo", reliabilityIndex: .neutral)
-    let news3 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/ele-nao-afirma-ciro-gomes-ao-ser-questionado-sobre-apoio-no-segundo-turno.ghtml", title: "'Ele não', afirma Ciro Gomes ao ser questionado sobre apoio no segundo turno", reliabilityIndex: .fake)
-    let news4 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/fora-do-segundo-turno-marina-diz-que-fara-oposicao-ao-presidente-eleito.ghtml", title: "Fora do segundo turno, Marina diz que fará oposição ao presidente que for eleito", reliabilityIndex: .neutral)
+    let news1 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/09/bolsonaro-diz-que-governo-corrupto-estimula-o-crime-e-que-vai-governar-pelo-exemplo.ghtml", title: "Bolsonaro diz que governo corrupto estimula o crime e que vai 'governar pelo exemplo'", reliabilityIndex: .fact, voters: [])
+    let news2 = News.init(portal: globo, url: "https://g1.globo.com/sp/sao-paulo/eleicoes/2018/noticia/2018/10/09/haddad-diz-estar-aberto-a-incorporar-propostas-de-ciro-gomes-em-programa-de-governo.ghtml", title: "Haddad diz estar 'aberto' a incorporar propostas de Ciro Gomes em programa de governo", reliabilityIndex: .neutral, voters: [])
+    let news3 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/ele-nao-afirma-ciro-gomes-ao-ser-questionado-sobre-apoio-no-segundo-turno.ghtml", title: "'Ele não', afirma Ciro Gomes ao ser questionado sobre apoio no segundo turno", reliabilityIndex: .fake, voters: [])
+    let news4 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/fora-do-segundo-turno-marina-diz-que-fara-oposicao-ao-presidente-eleito.ghtml", title: "Fora do segundo turno, Marina diz que fará oposição ao presidente que for eleito", reliabilityIndex: .neutral, voters: [])
     
     completion([news1, news2, news3, news4], nil)
 }

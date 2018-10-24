@@ -13,6 +13,7 @@ struct News {
     let url: String
     let title: String?
     let reliabilityIndex: ReliabilityIndex
+    let voters: [UserVote]
 }
 
 enum ReliabilityIndex: Int {
@@ -47,8 +48,8 @@ enum ReliabilityIndex: Int {
         case .fake: return #colorLiteral(red: 0.6784536895, green: 0.04439244277, blue: 0, alpha: 1)
         case .fact: return #colorLiteral(red: 0.001842024725, green: 0.6487192119, blue: 0.002858069079, alpha: 1)
         case .neutral: return #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-        case .fakeIsh: return #colorLiteral(red: 0.6964779598, green: 0.2887971449, blue: 0.2610646096, alpha: 1)
-        case .trueIsh: return #colorLiteral(red: 0.4457544687, green: 0.6487192119, blue: 0.4069307863, alpha: 1)
+        case .fakeIsh: return #colorLiteral(red: 1, green: 0.5034922401, blue: 0.2738988807, alpha: 1)
+        case .trueIsh: return #colorLiteral(red: 0.003147053285, green: 0.9782020597, blue: 1, alpha: 1)
         }
     }
 }

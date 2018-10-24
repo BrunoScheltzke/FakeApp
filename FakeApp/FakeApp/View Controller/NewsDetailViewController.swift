@@ -85,20 +85,29 @@ class NewsDetailViewController: UIViewController {
         self.view.lock()
         FakeApiConnector.shared.vote(vote, forNews: news.url) { (success, error) in
             DispatchQueue.main.async {
-                self.view.unlock()
                 if success {
                     self.present(message: "Ótimo! Obrigado pela sua opinião.")
                 } else {
                     self.present(message: error?.localizedDescription ?? "Ops, algo deu errado.")
                 }
             }
+            
+            FakeApiConnector.shared.verifyVeracity(ofNews: news.url, completion: { (news, error) in
+                if let news = news {
+                    DispatchQueue.main.async {
+                        self.news = news
+                        self.tableView.reloadData()
+                        self.view.unlock()
+                    }
+                }
+            })
         }
     }
 }
 
 extension NewsDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -111,6 +120,32 @@ extension NewsDetailViewController: UITableViewDataSource {
             let cell: ReliabilityIndexTableViewCell = tableView.dequeueReusableCell(for: indexPath)
             cell.news = news
             return cell
+            
+        case 2:
+            let cell = UITableViewCell()
+            if let userVote = FakeApiConnector.shared.getUserVote(on: news) {
+                let vote = userVote.vote ? "Fato" : "Fake"
+                cell.textLabel?.text = "Você votou \(vote) para essa notícia."
+            } else {
+                cell.textLabel?.text = "Você ainda não votou nessa notícia."
+            }
+            return cell
+            
+        case 3:
+            let cell = UITableViewCell()
+            
+            if news.voters.count == 0 {
+                cell.textLabel?.text = "Nenhuma pessoa votou nessa notícia ainda."
+            } else {
+                let message = news.voters.count == 1
+                    ? "Apenas uma pessoa votou nessa notícia."
+                    : "\(news.voters.count) pessoas votaram nessa notícia."
+                
+                cell.textLabel?.text = message
+            }
+            
+            return cell
+            
         default:
             return UITableViewCell()
         }

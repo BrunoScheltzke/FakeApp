@@ -67,7 +67,7 @@ class NewsCardTableViewCell: UITableViewCell {
                 }
                 
                 if let portalName = news.portal?.name {
-                    portal.text = "Portal: " + portalName
+                    portal.text = portalName
                 } else {
                     portal.text = "Clique para ver detalhes"
                 }

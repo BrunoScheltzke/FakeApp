@@ -18,7 +18,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://localhost:3000"
+        apiIP = "http://marfim.lad.pucrs.br:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     
@@ -52,7 +52,9 @@ class FakeApiConnector {
     
     private let aesKeyTag = "aesKeyTag0"
     
-    private let isDebugginR2ac = true
+    private let isDebugginR2ac = false
+    
+    var cacheNews = [String: News]()
     
     func verifyCredentials(completion: @escaping(Bool, Error?) -> Void) {
         if let key = getExistingAesKey() {
@@ -214,6 +216,7 @@ class FakeApiConnector {
             }
             
             let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: [])
+            self.cacheNews[resultNews.url] = resultNews
             completion(resultNews, error)
         }
         
@@ -257,11 +260,13 @@ class FakeApiConnector {
             self.previewManager.getPreview(of: decodedNews, completion: { (result, error) in
                 guard let result = result else {
                     let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: [])
+                    self.cacheNews[resultNews.url] = resultNews
                     completion(resultNews, error)
                     return
                 }
                 
                 let resultNews = News.init(portal: Portal(name: result.portal), url: decodedNews, title: result.title, reliabilityIndex: index, voters: voters)
+                self.cacheNews[resultNews.url] = resultNews
                 completion(resultNews, error)
             })
         }
@@ -273,11 +278,13 @@ class FakeApiConnector {
         self.previewManager.getPreview(of: news.url, completion: { (result, error) in
             guard let result = result else {
                 let resultNews = News.init(portal: nil, url: news.url, title: nil, reliabilityIndex: news.reliabilityIndex, voters: news.voters)
+                self.cacheNews[resultNews.url] = resultNews
                 completion(resultNews, error)
                 return
             }
             
             let resultNews = News.init(portal: Portal(name: result.portal), url: news.url, title: result.title, reliabilityIndex: news.reliabilityIndex, voters: news.voters)
+            self.cacheNews[resultNews.url] = resultNews
             completion(resultNews, error)
         })
     }
@@ -338,6 +345,9 @@ class FakeApiConnector {
             })
             
             taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+                news.forEach({ (resultNews) in
+                    self.cacheNews[resultNews.url] = resultNews
+                })
                 completion(news, nil)
             }))
         }

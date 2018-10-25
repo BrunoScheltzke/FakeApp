@@ -33,7 +33,7 @@ class NewsViewController: UIViewController {
 //            }
 //        }
         
-        view.lock()
+        self.view.lock()
         FakeApiConnector.shared.verifyCredentials { (success, error) in
             FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
                 self.view.unlock()
@@ -65,6 +65,24 @@ class NewsViewController: UIViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        //hides search
+        searchController.searchBar.placeholder = "Procure a veracidade de notícias"
+        view.unlock()
+        isSearching = false
+        searchResults = []
+        tableView.reloadData()
+        searchController.isActive = false
+        
+        //updates with updated news
+        let newsUrls = news.map { $0.url }
+        news = []
+        newsUrls.forEach { url in
+            if let newsCached = FakeApiConnector.shared.cacheNews[url] {
+                news.append(newsCached)
+            }
+        }
+        if news.count != 0 { tableView.reloadData() }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -101,6 +119,7 @@ extension NewsViewController: UISearchBarDelegate {
         searchController.searchBar.placeholder = "Procure a veracidade de notícias"
         view.unlock()
         isSearching = false
+        searchResults = []
         tableView.reloadData()
     }
     

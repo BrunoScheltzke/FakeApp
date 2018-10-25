@@ -144,7 +144,7 @@ extension NewsDetailViewController: UITableViewDataSource {
             } else {
                 let countFake = news.voters.filter { $0.vote == false }.count
                 let countFact = news.voters.filter { $0.vote == true }.count
-                let message = "Votos Fake: \(countFake). Votos Fato: \(countFact)"
+                let message = "Votos Fake: \(countFake)      Votos Fato: \(countFact)"
                 cell.textLabel?.text = message
             }
             return cell

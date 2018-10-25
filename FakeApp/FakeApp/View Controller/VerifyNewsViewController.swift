@@ -11,7 +11,6 @@ import UIKit
 class VerifyNewsViewController: UIViewController {
     @IBOutlet weak var newsURLTextField: UITextField!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addHideKeyboardOnTouch()

@@ -92,6 +92,7 @@ extension NewsViewController: UISearchResultsUpdating {
 extension NewsViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchController.searchBar.placeholder = "Procure a veracidade de notícias"
+        view.unlock()
         isSearching = false
         tableView.reloadData()
     }

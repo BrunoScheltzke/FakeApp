@@ -68,6 +68,7 @@ class NewsDetailViewController: UIViewController {
         tableView.register(type: ReliabilityIndexTableViewCell.self)
         tableView.register(type: NewsURLTableViewCell.self)
         tableView.register(type: VoteTableViewCell.self)
+        tableView.register(type: ProgressTableViewCell.self)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -92,7 +93,7 @@ class NewsDetailViewController: UIViewController {
                 }
             }
             
-            FakeApiConnector.shared.verifyVeracity(ofNews: news.url, completion: { (news, error) in
+            FakeApiConnector.shared.verifyVeracityWithPreview(ofNews: news.url, completion: { (news, error) in
                 if let news = news {
                     DispatchQueue.main.async {
                         self.news = news
@@ -107,7 +108,11 @@ class NewsDetailViewController: UIViewController {
 
 extension NewsDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if news.reliabilityIndex == .neutral {
+            return 5
+        } else {
+            return 4
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -137,15 +142,23 @@ extension NewsDetailViewController: UITableViewDataSource {
             if news.voters.count == 0 {
                 cell.textLabel?.text = "Nenhuma pessoa votou nessa notícia ainda."
             } else {
-                let message = news.voters.count == 1
-                    ? "Apenas uma pessoa votou nessa notícia."
-                    : "\(news.voters.count) pessoas votaram nessa notícia."
-                
+                let countFake = news.voters.filter { $0.vote == false }.count
+                let countFact = news.voters.filter { $0.vote == true }.count
+                let message = "Votos Fake: \(countFake). Votos Fato: \(countFact)"
                 cell.textLabel?.text = message
             }
-            
             return cell
             
+        case 4:
+            let cell: ProgressTableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            let fakeProgress = CGFloat(news.voters.filter{ $0.vote == false }.count)/50
+            let factProgress = CGFloat(news.voters.filter{ $0.vote == true }.count)/50
+            
+            cell.setFactProgress(to: factProgress)
+            cell.setFakeProgress(to: fakeProgress)
+            cell.descriptionProgress.text = "\(50 - news.voters.count) votos para mudar de índice."
+            return cell
+
         default:
             return UITableViewCell()
         }

@@ -10,7 +10,7 @@ import UIKit
 
 extension UIViewController {
     func present(message: String) {
-        let alert = UIAlertController(title: "FakeApp", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "No Fake News", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }

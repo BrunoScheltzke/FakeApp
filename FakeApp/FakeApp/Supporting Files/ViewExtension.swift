@@ -41,6 +41,7 @@ extension UIView {
         }
         
         let backGrounView = UIView()
+        backGrounView.layer.cornerRadius = self.layer.cornerRadius
         backGrounView.isUserInteractionEnabled = false
         backGrounView.tag = backGrounViewTag
         

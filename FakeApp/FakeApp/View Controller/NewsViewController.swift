@@ -26,12 +26,19 @@ class NewsViewController: UIViewController {
         
         setupTableView()
         
+//        mockNewsData { (news, error) in
+//            DispatchQueue.main.async {
+//                self.news = news
+//                self.tableView.reloadData()
+//            }
+//        }
+        
         view.lock()
         FakeApiConnector.shared.verifyCredentials { (success, error) in
             FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
+                self.view.unlock()
                 self.news = news ?? []
                 DispatchQueue.main.async {
-                    self.view.unlock()
                     self.tableView.reloadData()
                 }
                 if let error = error {
@@ -98,6 +105,7 @@ extension NewsViewController: UISearchBarDelegate {
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchResults = []
         searchController.searchBar.placeholder = "Insira a url da notícia"
         isSearching = true
         tableView.reloadData()
@@ -121,8 +129,8 @@ extension NewsViewController: UISearchBarDelegate {
         
         view.lock()
         FakeApiConnector.shared.verifyVeracity(ofNews: url) { (news, error) in
+            self.view.unlock()
             DispatchQueue.main.async {
-                self.view.unlock()
                 if let news = news {
                     self.searchResults = [news]
                 } else {
@@ -137,9 +145,9 @@ extension NewsViewController: UISearchBarDelegate {
 
 extension NewsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let news =  isSearching ? searchResults[indexPath.row] : self.news[indexPath.row]
-        
-        performSegue(withIdentifier: presentNewsSegue, sender: news)
+        if let cell = tableView.cellForRow(at: indexPath) as? NewsCardTableViewCell {
+            performSegue(withIdentifier: presentNewsSegue, sender: cell.news)
+        }
     }
 }
 
@@ -161,7 +169,20 @@ extension NewsViewController: UITableViewDataSource {
 func mockNewsData(completion: @escaping ([News], Error?) -> Void) {
     let globo = Portal(name: "G1")
     let news1 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/09/bolsonaro-diz-que-governo-corrupto-estimula-o-crime-e-que-vai-governar-pelo-exemplo.ghtml", title: "Bolsonaro diz que governo corrupto estimula o crime e que vai 'governar pelo exemplo'", reliabilityIndex: .fact, voters: [])
-    let news2 = News.init(portal: globo, url: "https://g1.globo.com/sp/sao-paulo/eleicoes/2018/noticia/2018/10/09/haddad-diz-estar-aberto-a-incorporar-propostas-de-ciro-gomes-em-programa-de-governo.ghtml", title: "Haddad diz estar 'aberto' a incorporar propostas de Ciro Gomes em programa de governo", reliabilityIndex: .neutral, voters: [])
+    let news2 = News.init(portal: globo, url: "https://g1.globo.com/sp/sao-paulo/eleicoes/2018/noticia/2018/10/09/haddad-diz-estar-aberto-a-incorporar-propostas-de-ciro-gomes-em-programa-de-governo.ghtml", title: "Haddad diz estar 'aberto' a incorporar propostas de Ciro Gomes em programa de governo", reliabilityIndex: .neutral, voters: [UserVote.init(publicKey: "dd", vote: true),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "dd", vote: true),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "dd", vote: true),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "dd", vote: true),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "dd", vote: true),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false),
+                                                                                                                                                                                                                                                                                                                                                   UserVote.init(publicKey: "", vote: false)])
     let news3 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/ele-nao-afirma-ciro-gomes-ao-ser-questionado-sobre-apoio-no-segundo-turno.ghtml", title: "'Ele não', afirma Ciro Gomes ao ser questionado sobre apoio no segundo turno", reliabilityIndex: .fake, voters: [])
     let news4 = News.init(portal: globo, url: "https://g1.globo.com/politica/eleicoes/2018/noticia/2018/10/07/fora-do-segundo-turno-marina-diz-que-fara-oposicao-ao-presidente-eleito.ghtml", title: "Fora do segundo turno, Marina diz que fará oposição ao presidente que for eleito", reliabilityIndex: .neutral, voters: [])
     

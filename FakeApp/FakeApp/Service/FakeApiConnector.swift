@@ -8,7 +8,8 @@
 
 import Foundation
 
-//marfim.lad.pucrs.br
+//apiIP = "http://marfim.lad.pucrs.br:3000"
+//apiIP = "http://localhost:3000"
 
 class FakeApiConnector {
     static let shared = FakeApiConnector()
@@ -49,7 +50,7 @@ class FakeApiConnector {
     
     private var dateFor: DateFormatter = DateFormatter()
     
-    private let aesKeyTag = "aesKeyTag"
+    private let aesKeyTag = "aesKeyTag0"
     
     private let isDebugginR2ac = true
     
@@ -212,6 +213,47 @@ class FakeApiConnector {
                 }
             }
             
+            let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: [])
+            completion(resultNews, error)
+        }
+        
+        task.resume()
+    }
+    
+    // MARK: Verify News
+    func verifyVeracityWithPreview(ofNews news: String, completion: @escaping (News?, Error?) -> Void) {
+        guard let news = news.base64encoded(),
+            let url = URL(string: verifyNewsPath + news) else {
+                completion(nil, nil)
+                return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let dict = json as? [String:AnyObject] else {
+                    completion(nil, error)
+                    return
+            }
+            
+            let indexNum = dict[self.reliabilityIndexKey] as? Int ?? ReliabilityIndex.neutral.rawValue
+            let index = ReliabilityIndex(rawValue: indexNum)!
+            let decodedNews = news.base64decoded()!
+            
+            var voters = [UserVote]()
+            
+            if let votersDict = dict[self.votersKey] as? [[String: Any]] {
+                for dict in votersDict {
+                    guard let userDict = dict["user"] as? [String: Any],
+                        let userPublicKey = userDict["userPublicKey"] as? String,
+                        let vote = dict["vote"] as? Bool else { return }
+                    
+                    voters.append(UserVote.init(publicKey: userPublicKey, vote: vote))
+                }
+            }
+            
             self.previewManager.getPreview(of: decodedNews, completion: { (result, error) in
                 guard let result = result else {
                     let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: [])
@@ -225,6 +267,19 @@ class FakeApiConnector {
         }
         
         task.resume()
+    }
+    
+    func requestPreview(of news: News, completion: @escaping(News?, Error?) -> Void) {
+        self.previewManager.getPreview(of: news.url, completion: { (result, error) in
+            guard let result = result else {
+                let resultNews = News.init(portal: nil, url: news.url, title: nil, reliabilityIndex: news.reliabilityIndex, voters: news.voters)
+                completion(resultNews, error)
+                return
+            }
+            
+            let resultNews = News.init(portal: Portal(name: result.portal), url: news.url, title: result.title, reliabilityIndex: news.reliabilityIndex, voters: news.voters)
+            completion(resultNews, error)
+        })
     }
     
     func requestTrendingNews(completion: @escaping([News]?, Error?) -> Void) {

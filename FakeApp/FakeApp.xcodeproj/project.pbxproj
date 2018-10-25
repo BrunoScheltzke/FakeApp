@@ -21,6 +21,8 @@
 		8400CB7C216E437F008C8C00 /* NewsCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8400CB7A216E437F008C8C00 /* NewsCardTableViewCell.xib */; };
 		8442F908214C658C001984E8 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8442F907214C658C001984E8 /* StringExtension.swift */; };
 		844D302D216E475900C71D81 /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D302C216E475900C71D81 /* Layer.swift */; };
+		847332FC2182376700445985 /* ProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847332FA2182376700445985 /* ProgressTableViewCell.swift */; };
+		847332FD2182376700445985 /* ProgressTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 847332FB2182376700445985 /* ProgressTableViewCell.xib */; };
 		847B5A32216ED69C000EE744 /* PreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B5A31216ED69C000EE744 /* PreviewManager.swift */; };
 		849DC6EC214ABECC0017EBEC /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849DC6EB214ABECC0017EBEC /* ViewExtension.swift */; };
 		84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */; };
@@ -57,6 +59,8 @@
 		8400CB7A216E437F008C8C00 /* NewsCardTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsCardTableViewCell.xib; sourceTree = "<group>"; };
 		8442F907214C658C001984E8 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		844D302C216E475900C71D81 /* Layer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layer.swift; sourceTree = "<group>"; };
+		847332FA2182376700445985 /* ProgressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTableViewCell.swift; sourceTree = "<group>"; };
+		847332FB2182376700445985 /* ProgressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProgressTableViewCell.xib; sourceTree = "<group>"; };
 		847B5A31216ED69C000EE744 /* PreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewManager.swift; sourceTree = "<group>"; };
 		849DC6EB214ABECC0017EBEC /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		84A7A52B2146ADA400D2A2CB /* FakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +109,8 @@
 				8400CB71216E3492008C8C00 /* VoteTableViewCell.xib */,
 				8400CB79216E437F008C8C00 /* NewsCardTableViewCell.swift */,
 				8400CB7A216E437F008C8C00 /* NewsCardTableViewCell.xib */,
+				847332FA2182376700445985 /* ProgressTableViewCell.swift */,
+				847332FB2182376700445985 /* ProgressTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -269,6 +275,7 @@
 				8400CB66216E33E5008C8C00 /* TitleTableViewCell.xib in Resources */,
 				84A7A5392146ADA500D2A2CB /* LaunchScreen.storyboard in Resources */,
 				8400CB73216E3492008C8C00 /* VoteTableViewCell.xib in Resources */,
+				847332FD2182376700445985 /* ProgressTableViewCell.xib in Resources */,
 				8400CB6F216E3485008C8C00 /* NewsURLTableViewCell.xib in Resources */,
 				8400CB7C216E437F008C8C00 /* NewsCardTableViewCell.xib in Resources */,
 				8400CB6B216E3407008C8C00 /* ReliabilityIndexTableViewCell.xib in Resources */,
@@ -339,6 +346,7 @@
 				8400CB76216E3B1E008C8C00 /* ReusableView.swift in Sources */,
 				847B5A32216ED69C000EE744 /* PreviewManager.swift in Sources */,
 				84E683C6216D716000A08D87 /* NewsViewController.swift in Sources */,
+				847332FC2182376700445985 /* ProgressTableViewCell.swift in Sources */,
 				84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */,
 				8442F908214C658C001984E8 /* StringExtension.swift in Sources */,
 				84A7A5412146B1C100D2A2CB /* VerifyNewsViewController.swift in Sources */,

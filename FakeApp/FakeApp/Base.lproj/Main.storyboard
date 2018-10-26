@@ -45,7 +45,7 @@
                             <constraint firstItem="bg2-QH-W0L" firstAttribute="leading" secondItem="Lhi-2L-xFY" secondAttribute="leading" id="JId-52-UkC"/>
                             <constraint firstItem="Lhi-2L-xFY" firstAttribute="trailing" secondItem="bg2-QH-W0L" secondAttribute="trailing" id="KSC-L2-Wnm"/>
                             <constraint firstItem="Lhi-2L-xFY" firstAttribute="bottom" secondItem="bg2-QH-W0L" secondAttribute="bottom" id="nEx-WG-jhZ"/>
-                            <constraint firstItem="bg2-QH-W0L" firstAttribute="top" secondItem="Lhi-2L-xFY" secondAttribute="top" id="vGY-TU-1Os"/>
+                            <constraint firstItem="bg2-QH-W0L" firstAttribute="top" secondItem="Icf-CQ-pN1" secondAttribute="top" id="vGY-TU-1Os"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Lhi-2L-xFY"/>
                     </view>
@@ -64,15 +64,15 @@
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="Ni8-dv-fTG" customClass="NewsDetailViewController" customModule="FakeApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nkw-98-6AP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="160" translatesAutoresizingMaskIntoConstraints="NO" id="ESt-d0-BRL">
-                                <rect key="frame" x="0.0" y="116" width="375" height="501"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="501"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ce-YA-aWF">
-                                <rect key="frame" x="0.0" y="617" width="375" height="160"/>
+                                <rect key="frame" x="0.0" y="501" width="375" height="160"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="1nC-cZ-OVm">
                                         <rect key="frame" x="16" y="94" width="343" height="50"/>
@@ -364,6 +364,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pS7-vN-iSo"/>
+        <segue reference="ZMc-KJ-dMK"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -14,6 +14,29 @@ class NewsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var news: [News] = []
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action:
+            #selector(handleRefresh(_:)),
+                                 for: UIControlEvents.valueChanged)
+        refreshControl.tintColor = UIColor.lightGray
+        
+        return refreshControl
+    }()
+    
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        self.view.lock()
+        FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
+            self.view.unlock()
+            self.news = news ?? []
+            refreshControl.endRefreshing()
+            self.tableView.reloadData()
+            if let error = error {
+                self.present(message: error.localizedDescription)
+            }
+        })
+    }
+    
     var searchResults: [News] = []
     var isSearching: Bool = false
     
@@ -66,6 +89,8 @@ class NewsViewController: UIViewController {
         
         navigationItem.hidesSearchBarWhenScrolling = false
         
+        extendedLayoutIncludesOpaqueBars = true
+        
         //hides search
         searchController.searchBar.placeholder = "Procure a veracidade de notícias"
         isSearching = false
@@ -94,6 +119,7 @@ class NewsViewController: UIViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         
         tableView.register(type: NewsCardTableViewCell.self)
+        tableView.refreshControl = refreshControl
         
         tableView.delegate = self
         tableView.dataSource = self

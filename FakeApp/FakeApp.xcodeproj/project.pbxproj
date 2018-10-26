@@ -23,6 +23,7 @@
 		844D302D216E475900C71D81 /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D302C216E475900C71D81 /* Layer.swift */; };
 		847332FC2182376700445985 /* ProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847332FA2182376700445985 /* ProgressTableViewCell.swift */; };
 		847332FD2182376700445985 /* ProgressTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 847332FB2182376700445985 /* ProgressTableViewCell.xib */; };
+		847A3F38218293360037A263 /* VotedListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A3F37218293360037A263 /* VotedListViewController.swift */; };
 		847B5A32216ED69C000EE744 /* PreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847B5A31216ED69C000EE744 /* PreviewManager.swift */; };
 		849DC6EC214ABECC0017EBEC /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849DC6EB214ABECC0017EBEC /* ViewExtension.swift */; };
 		84A7A52F2146ADA400D2A2CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A7A52E2146ADA400D2A2CB /* AppDelegate.swift */; };
@@ -61,6 +62,7 @@
 		844D302C216E475900C71D81 /* Layer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layer.swift; sourceTree = "<group>"; };
 		847332FA2182376700445985 /* ProgressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTableViewCell.swift; sourceTree = "<group>"; };
 		847332FB2182376700445985 /* ProgressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProgressTableViewCell.xib; sourceTree = "<group>"; };
+		847A3F37218293360037A263 /* VotedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotedListViewController.swift; sourceTree = "<group>"; };
 		847B5A31216ED69C000EE744 /* PreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewManager.swift; sourceTree = "<group>"; };
 		849DC6EB214ABECC0017EBEC /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		84A7A52B2146ADA400D2A2CB /* FakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,6 +170,7 @@
 				84A7A5422146B1E500D2A2CB /* SettingsViewController.swift */,
 				84E683C5216D716000A08D87 /* NewsViewController.swift */,
 				8400CB77216E3CD2008C8C00 /* NewsDetailViewController.swift */,
+				847A3F37218293360037A263 /* VotedListViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				84B36E6D214BE18000BCEE92 /* DictionaryExtension.swift in Sources */,
 				8400CB78216E3CD2008C8C00 /* NewsDetailViewController.swift in Sources */,
 				84FACC562180C56800E29AAD /* User.swift in Sources */,
+				847A3F38218293360037A263 /* VotedListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

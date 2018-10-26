@@ -14,7 +14,7 @@ extension String {
     }
     
     func encodeUrl() -> String? {
-        return self.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlHostAllowed)
+        return self.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed)
     }
     
     func decodeUrl() -> String? {

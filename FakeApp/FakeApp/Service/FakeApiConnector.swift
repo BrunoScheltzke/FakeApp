@@ -13,7 +13,7 @@ import Foundation
 
 class FakeApiConnector {
     static let shared = FakeApiConnector()
-    private let encryptionManager: EncryptionManager
+    let encryptionManager: EncryptionManager
     private let previewManager: PreviewManager
     private init() {
         encryptionManager = EncryptionManager()
@@ -33,6 +33,7 @@ class FakeApiConnector {
     lazy private var verifyNewsPath = "\(apiIP)/newsURL/"
     lazy private var createUserPath = "\(apiIP)/createBlock"
     lazy private var getTrendingNewsPath = "\(apiIP)/trendingNews"
+    lazy private var getVotedNewsPath = "\(apiIP)/newsVotedBy/"
     
     private let voteKey = "vote"
     private let newsKey = "newsURL"
@@ -78,6 +79,81 @@ class FakeApiConnector {
                 }
             }
         }
+    }
+    
+    func getVotedNews(completion: @escaping([News]?, Error?) -> Void) {
+        guard let userPublicKey = encryptionManager.getPublicKey().key else {
+            completion(nil, nil)
+            return
+        }
+        
+        guard let encodedKey = userPublicKey.encodeUrl() else {
+            completion(nil, nil)
+            return
+        }
+        
+        guard let url = URL(string: getVotedNewsPath + encodedKey) else {
+            completion(nil, nil)
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                let newsDict = json as? [[String:AnyObject]] else {
+                    completion(nil, error)
+                    return
+            }
+            
+            var news: [News] = []
+            let newsInfo = newsDict.map({ dict -> (url: String, index: ReliabilityIndex, voters: [UserVote]) in
+                var voters = [UserVote]()
+                
+                if let votersDict = dict[self.votersKey] as? [[String: Any]] {
+                    for dict in votersDict {
+                        guard let userDict = dict["user"] as? [String: Any],
+                            let userPublicKey = userDict["userPublicKey"] as? String,
+                            let vote = dict["vote"] as? Bool else { break }
+                        
+                        voters.append(UserVote.init(publicKey: userPublicKey, vote: vote))
+                    }
+                }
+                
+                let urlEncoded = dict["url"] as! String
+                let url = urlEncoded.base64decoded()!
+                let ind = dict[self.reliabilityIndexKey] as! Int
+                let index = ReliabilityIndex(rawValue: ind)!
+                return (url, index, voters)
+            })
+            
+            let taskGroup = DispatchGroup()
+            
+            newsInfo.forEach({ (newsInfoItem) in
+                taskGroup.enter()
+                self.previewManager.getPreview(of: newsInfoItem.url, completion: { (result, error) in
+                    if let result = result {
+                        let resultNews = News.init(portal: Portal(name: result.portal), url: newsInfoItem.url, title: result.title, reliabilityIndex: newsInfoItem.index, voters: newsInfoItem.voters)
+                        news.append(resultNews)
+                    } else {
+                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index, voters: [])
+                        news.append(resultNews)
+                    }
+                    defer {
+                        taskGroup.leave()
+                    }
+                })
+            })
+            
+            taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+                news.forEach({ (resultNews) in
+                    self.cacheNews[resultNews.url] = resultNews
+                })
+                completion(news, nil)
+            }))
+        }
+        task.resume()
     }
     
     // MARK: Vote

@@ -68,7 +68,6 @@ class NewsViewController: UIViewController {
         
         //hides search
         searchController.searchBar.placeholder = "Procure a veracidade de notícias"
-        view.unlock()
         isSearching = false
         searchResults = []
         tableView.reloadData()

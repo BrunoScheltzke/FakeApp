@@ -8,7 +8,7 @@
 
 import Foundation
 
-//apiIP = "http://marfim.lad.pucrs.br:3000"
+//apiIP = "http://conseg.lad.pucrs.br:3000"
 //apiIP = "http://localhost:3000"
 
 class FakeApiConnector {
@@ -18,7 +18,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://marfim.lad.pucrs.br:3000"
+        apiIP = "http://conseg.lad.pucrs.br:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     

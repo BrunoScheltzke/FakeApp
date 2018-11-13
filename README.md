@@ -15,7 +15,7 @@ You will find the steps necessary on the [FakeApi git repository](https://github
 
 ## Test Flight
 You can test the app from the [link on the Test Flight app](https://testflight.apple.com/join/0l2K5X3K)
- * The app is still under tests and might be instable
+ * The app is still under tests and might be unstable
 
 ## Search for news
 <img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/pesquisapornoticia.png" width="700">

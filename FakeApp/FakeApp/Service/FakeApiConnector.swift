@@ -18,7 +18,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://conseg.lad.pucrs.br:3000"
+        apiIP = "http://localhost:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     
@@ -34,6 +34,7 @@ class FakeApiConnector {
     lazy private var createUserPath = "\(apiIP)/createBlock"
     lazy private var getTrendingNewsPath = "\(apiIP)/trendingNews"
     lazy private var getVotedNewsPath = "\(apiIP)/newsVotedBy/"
+    lazy private var verifyCredentialsPath = "\(apiIP)/verifyCredentials/"
     
     private let voteKey = "vote"
     private let newsKey = "newsURL"
@@ -58,25 +59,20 @@ class FakeApiConnector {
     var cacheNews = [String: News]()
     
     func verifyCredentials(completion: @escaping(Bool, Error?) -> Void) {
-        if let key = getExistingAesKey() {
-            serverAESKey = key
-            completion(true, nil)
-        } else {
-            //get public key
-            let keyRequestResult = encryptionManager.getPublicKey()
-            guard let publicKey = keyRequestResult.0 else {
-                completion(false, keyRequestResult.1)
+        //get public key
+        let keyRequestResult = encryptionManager.getPublicKey()
+        guard let publicKey = keyRequestResult.0 else {
+            completion(false, keyRequestResult.1)
+            return
+        }
+        requestAesKey(withPublicKey: publicKey) { (aesKey, error) in
+            if let key = aesKey {
+                self.storeAesKey(key)
+                completion(true, nil)
                 return
-            }
-            requestAesKey(withPublicKey: publicKey) { (aesKey, error) in
-                if let key = aesKey {
-                    self.storeAesKey(key)
-                    completion(true, nil)
-                    return
-                } else {
-                    completion(false, error)
-                    return
-                }
+            } else {
+                completion(false, error)
+                return
             }
         }
     }

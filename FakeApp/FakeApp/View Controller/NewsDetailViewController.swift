@@ -85,20 +85,18 @@ class NewsDetailViewController: UIViewController {
     func vote(_ vote: Bool, for news: News) {
         self.view.lock()
         FakeApiConnector.shared.vote(vote, forNews: news.url) { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    self.present(message: "Ótimo! Obrigado pela sua opinião.")
-                } else {
-                    self.present(message: error?.localizedDescription ?? "Ops, algo deu errado.")
-                }
-            }
-            
             FakeApiConnector.shared.verifyVeracityWithPreview(ofNews: news.url, completion: { (news, error) in
                 if let news = news {
                     DispatchQueue.main.async {
                         self.news = news
                         self.tableView.reloadData()
                         self.view.unlock()
+                        
+                        if success {
+                            self.present(message: "Ótimo! Obrigado pela sua opinião.")
+                        } else {
+                            self.present(message: error?.localizedDescription ?? "Ops, algo deu errado.")
+                        }
                     }
                 }
             })

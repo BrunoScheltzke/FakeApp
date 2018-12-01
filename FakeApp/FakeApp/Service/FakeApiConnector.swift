@@ -18,7 +18,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://localhost:3000"
+        apiIP = "http://conseg.lad.pucrs.br:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     

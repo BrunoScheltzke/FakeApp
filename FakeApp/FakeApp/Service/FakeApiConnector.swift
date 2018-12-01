@@ -18,7 +18,7 @@ class FakeApiConnector {
     private init() {
         encryptionManager = EncryptionManager()
         previewManager = PreviewManager()
-        apiIP = "http://marfim.lad.pucrs.br:3000"
+        apiIP = "http://localhost:3000"
         dateFor.dateFormat = "yyyy-MM-dd'T'HH:mm:ss:SSS"
     }
     
@@ -137,7 +137,7 @@ class FakeApiConnector {
                         let resultNews = News.init(portal: Portal(name: result.portal), url: newsInfoItem.url, title: result.title, reliabilityIndex: newsInfoItem.index, voters: newsInfoItem.voters)
                         news.append(resultNews)
                     } else {
-                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index, voters: [])
+                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index, voters: newsInfoItem.voters)
                         news.append(resultNews)
                     }
                     defer {
@@ -146,7 +146,7 @@ class FakeApiConnector {
                 })
             })
             
-            taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+            taskGroup.notify(queue: DispatchQueue.global(), work: DispatchWorkItem(block: {
                 news.forEach({ (resultNews) in
                     self.cacheNews[resultNews.url] = resultNews
                 })
@@ -335,7 +335,7 @@ class FakeApiConnector {
             
             self.previewManager.getPreview(of: decodedNews, completion: { (result, error) in
                 guard let result = result else {
-                    let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: [])
+                    let resultNews = News.init(portal: nil, url: decodedNews, title: nil, reliabilityIndex: index, voters: voters)
                     self.cacheNews[resultNews.url] = resultNews
                     completion(resultNews, error)
                     return
@@ -411,7 +411,7 @@ class FakeApiConnector {
                         let resultNews = News.init(portal: Portal(name: result.portal), url: newsInfoItem.url, title: result.title, reliabilityIndex: newsInfoItem.index, voters: newsInfoItem.voters)
                         news.append(resultNews)
                     } else {
-                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index, voters: [])
+                        let resultNews = News.init(portal: nil, url: newsInfoItem.url, title: nil, reliabilityIndex: newsInfoItem.index, voters: newsInfoItem.voters)
                         news.append(resultNews)
                     }
                     defer {
@@ -420,7 +420,7 @@ class FakeApiConnector {
                 })
             })
             
-            taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+            taskGroup.notify(queue: DispatchQueue.global(), work: DispatchWorkItem(block: {
                 news.forEach({ (resultNews) in
                     self.cacheNews[resultNews.url] = resultNews
                 })

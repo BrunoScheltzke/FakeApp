@@ -29,10 +29,13 @@ class NewsViewController: UIViewController {
         FakeApiConnector.shared.requestTrendingNews(completion: { (news, error) in
             self.view.unlock()
             self.news = news ?? []
-            refreshControl.endRefreshing()
-            self.tableView.reloadData()
-            if let error = error {
-                self.present(message: error.localizedDescription)
+            
+            DispatchQueue.main.async {
+                refreshControl.endRefreshing()
+                self.tableView.reloadData()
+                if let error = error {
+                    self.present(message: error.localizedDescription)
+                }
             }
         })
     }

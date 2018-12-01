@@ -14,8 +14,8 @@ class PreviewManager {
     
     init() {
         let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 07.0
-        sessionConfig.timeoutIntervalForResource = 07.0
+        sessionConfig.timeoutIntervalForRequest = 05.0
+        sessionConfig.timeoutIntervalForResource = 05.0
         let session = URLSession(configuration: sessionConfig)
         slp = SwiftLinkPreview(session: session,
                                workQueue: SwiftLinkPreview.defaultWorkQueue,

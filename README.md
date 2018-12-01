@@ -2,7 +2,7 @@
 
 A simple iPhone app to connect with [FakeApi](https://github.com/BrunoScheltzke/FakeAPI) and enable users to verify the veracity of news and provide their opinions(fake/true) about it.
 
-<img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/IMG_4523.PNG" width="250">        <img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/IMG_4524.PNG" width="250">
+<img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/votoemnoticia.png" width="700">
 
 ## Installation
 #### Clone the project
@@ -13,8 +13,12 @@ A simple iPhone app to connect with [FakeApi](https://github.com/BrunoScheltzke/
 #### Install and run FakeApi
 You will find the steps necessary on the [FakeApi git repository](https://github.com/BrunoScheltzke/FakeAPI)
 
-#### Verify your local ip address and set it on settings tab of the iPhone FakeApp
-<img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/IMG_4525.PNG" width="250">
+## Test Flight
+You can test the app from the [link on the Test Flight app](https://testflight.apple.com/join/0l2K5X3K)
+ * The app is still under tests and might be unstable
+
+## Search for news
+<img src="https://github.com/BrunoScheltzke/FakeApp/blob/master/pesquisapornoticia.png" width="700">
 
 ## To do list:
 - [x] Create basic vote screen
@@ -24,11 +28,11 @@ You will find the steps necessary on the [FakeApi git repository](https://github
 - [x] Implement user authentication
 - [x] Modify vote screen so it only takes false or true values for vote
 - [x] Modify verify-news screen to display news veracity in a more user-friendly way
-- [ ] Create app icon
+- [x] Create app icon
 - [ ] Submit to App Store
-- [ ] Let user know if s/he has voted on a certain news
-- [ ] Display number of voters on news
-- [ ] Display news that other users have voted based on news the current user has voted
+- [x] Let user know if s/he has voted on a certain news
+- [x] Display number of voters on news
+- [x] Display news that other users have voted based on news the current user has voted
 
 ## Author
 [Bruno Scheltzke 🙋‍♂️](https://www.linkedin.com/in/brunoscheltzke/)

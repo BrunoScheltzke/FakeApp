@@ -18,9 +18,7 @@ class VotedListViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         
-        self.view.lock()
         FakeApiConnector.shared.getVotedNews(completion: { (news, error) in
-            self.view.unlock()
             self.news = news ?? []
             DispatchQueue.main.async {
                 self.tableView.reloadData()
